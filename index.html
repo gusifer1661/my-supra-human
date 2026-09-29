@@ -169,6 +169,51 @@ a.btn{text-decoration:none}
 .cues .k{flex:0 0 58px;padding-top:2px;font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--accent)}
 .cues li.avoid .k{color:var(--bad)}
 .hidden{display:none!important}
+.ex-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+#workoutCard .ex{flex-wrap:wrap}
+.row-actions{flex-basis:100%;margin:-4px 0 0 46px}
+.prog-chip{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;margin-top:14px;padding:10px 14px;min-height:52px;border-radius:14px;background:rgba(212,255,58,.08);border:1px solid rgba(212,255,58,.28);text-align:left;font-size:14px}
+.prog-chip b{color:var(--accent);font-weight:800}
+.prog-chip .sub{font-size:12px}
+.prog-chip>span:last-child{font-size:22px;color:var(--accent)}
+select#planWeekSel{font-size:15px;padding-right:34px}
+.repl-btn{background:var(--card2);border-color:var(--line);color:var(--text)}
+.repl-btn svg{width:14px;height:14px;fill:none}
+.ss{display:inline-block;vertical-align:1px;margin-right:6px;padding:1px 6px;border-radius:6px;background:rgba(212,255,58,.14);color:var(--accent);font-size:11px;font-weight:800;letter-spacing:.3px}
+.ss.fin{background:rgba(255,177,61,.14);color:var(--warn)}
+.swapped{margin-top:3px;font-size:12px;color:var(--warn);display:flex;align-items:center;flex-wrap:wrap;gap:2px 8px}
+.linkbtn{min-height:32px;padding:0 6px;color:var(--accent);font-weight:750;font-size:12px;text-decoration:underline;text-underline-offset:2px}
+.prog-hdr{background:radial-gradient(120% 140% at 100% 0%,rgba(212,255,58,.14),transparent 60%),var(--bg2);border:1px solid rgba(212,255,58,.25);border-radius:14px;padding:12px 14px}
+.prog-hdr.deload{border-color:rgba(255,177,61,.35);background:var(--bg2)}
+.prog-wk{font-size:17px;font-weight:850;letter-spacing:-.2px}
+.prog-bar{height:6px;background:var(--card2);border-radius:99px;overflow:hidden;margin-top:10px}
+.prog-bar>i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.tl{display:flex;gap:3px;margin-top:14px;height:22px}
+.tl-seg{min-width:6px;border-radius:5px;background:rgba(212,255,58,.28);border:1px solid transparent;padding:0}
+.tl-seg.dl{background:var(--card2);border-color:var(--line)}
+.tl-seg.on{background:var(--accent);box-shadow:0 0 0 2px var(--bg),0 0 0 3px var(--accent)}
+.tl-seg.dl.on{background:var(--warn);box-shadow:0 0 0 2px var(--bg),0 0 0 3px var(--warn)}
+.week-nav{display:flex;gap:8px;align-items:center;margin-top:12px}
+.week-nav select{flex:1;min-width:0}
+.nav-btn{flex:0 0 auto;width:48px;height:48px;border-radius:13px;background:var(--card2);border:1px solid var(--line);font-size:24px;font-weight:700;line-height:1}
+.nav-btn:disabled{opacity:.35}
+.phase-card.deload{border-color:rgba(255,177,61,.35)}
+.ph-grid{display:grid;gap:8px;margin-top:12px}
+.ph-grid>div{display:flex;flex-direction:column;gap:2px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:9px 12px}
+.ph-grid span{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.ph-grid b{font-size:14px;font-weight:650}
+.ph-notes{margin:12px 0 0;padding-left:18px;color:var(--muted);font-size:13px}
+.ph-notes li{margin:4px 0}
+.alt-list{margin-top:12px;border-top:1px solid var(--line)}
+.alt-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.alt-pick{flex:1;min-width:0;min-height:52px;text-align:left;display:flex;flex-direction:column;justify-content:center;gap:3px;padding:6px 12px;border-radius:12px;background:var(--card2);border:1px solid var(--line)}
+.alt-pick:active{border-color:var(--accent)}
+.alt-pick b{font-size:15px;font-weight:750}
+.alt-pick .pill{padding:1px 7px;font-size:10px;vertical-align:1px}
+.alt-pick .sub{font-size:12px}
+.eq{display:inline-block;padding:0 6px;border-radius:5px;background:rgba(212,255,58,.12);color:var(--accent);font-weight:700;font-size:11px}
+.chk{display:flex;align-items:flex-start;gap:12px;margin-top:14px;padding:12px 14px;border-radius:14px;background:var(--bg2);border:1px solid var(--line);font-size:14px}
+.chk input{width:22px;height:22px;margin:1px 0 0;accent-color:var(--accent);flex:0 0 auto}
 </style>
 </head>
 <body>
@@ -204,25 +249,7 @@ a.btn{text-decoration:none}
 "use strict";
 /* ================= Data ================= */
 const STORE_KEY = 'suprahuman.v1';
-const SPLIT = {
-  1:{name:'Upper A',sub:'Push emphasis',ex:[
-    ['Bench press',4,'6-8'],['Incline DB press',3,'8-10'],['Seated cable row',3,'10-12'],
-    ['Overhead DB press',3,'8-10'],['Lateral raises',3,'12-15'],['Triceps rope pushdown',3,'10-12']]},
-  2:{name:'Lower A',sub:'Squat focus',ex:[
-    ['Back squat',4,'6-8'],['Romanian deadlift',3,'8-10'],['Leg press',3,'10-12'],
-    ['Leg curl',3,'10-12'],['Standing calf raise',4,'12-15'],['Plank',3,'45s',true]]},
-  3:{name:'Upper B',sub:'Pull emphasis',ex:[
-    ['Lat pulldown',4,'8-10'],['Chest-supported row',3,'8-10'],['Incline bench or machine press',3,'8-10'],
-    ['Face pulls',3,'12-15'],['DB curls',3,'10-12'],['Hammer curls',2,'12']]},
-  4:{name:'Lower B',sub:'Hinge focus',ex:[
-    ['Trap-bar or conventional deadlift',3,'5'],['Bulgarian split squat',3,'8-10/leg'],['Hip thrust',3,'8-10'],
-    ['Leg extension',3,'12-15'],['Seated calf raise',3,'15'],['Hanging knee raise',3,'12',true]]},
-  5:{name:'Full Body',sub:'+ Conditioning',ex:[
-    ['DB bench',3,'10'],['Pull-ups or assisted',3,'AMRAP'],['Goblet squat',3,'12'],['Cable row',3,'12'],
-    ['Intervals: bike or rower',1,'15-20 min · 30s hard / 90s easy',true]]},
-  6:{name:'Rest / Walk',sub:'Active recovery',ex:[]},
-  0:{name:'Rest / Walk',sub:'Active recovery',ex:[]}
-};
+/* Weekly plan now lives in 03-program.js (52-week periodized program). */
 const WALK = 'Incline walk';
 const DAYNAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const DAYFULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -254,200 +281,344 @@ const SWEETS = [
   {t:'Protein "ice cream"',d:'Frozen protein shake blended thick (or Ninja Creami); hits the sweet craving.',p:30,c:180}
 ];
 const DEFAULTS = () => ({
-  v:1,
+  v:2,
   profile:{name:'',age:'',height:'',start:190,goal:170},
   targets:{calMin:1700,calMax:1900,proMin:140,proMax:160,water:64,steps:8000},
-  days:{}, weights:[], zep:[], checkins:[]
+  days:{}, weights:[], zep:[], checkins:[],
+  program:{start:dkey()}, swaps:{always:{}, day:{}}
 });
 /* ================= How-to (exercise demos + form cues) =================
-   v: [YouTube id, title, channel], each verified via YouTube oEmbed (2026-09-29).
-   c: [setup, movement, what you should feel, common mistake]. alt: optional 2nd video [id,title,channel,label]. */
+   Generated by tools/howto-src/build-howto.js. v: [YouTube id, title, channel], every id verified via YouTube oEmbed (HTTP 200) on 2026-09-29.
+   m: muscles · e: equipment · c: [setup, movement, what you should feel, common mistake] · tip: beginner tip/substitution · alt: optional 2nd video. */
 const HOWTO = {
-  'Bench press':{m:'Chest · front delts · triceps',v:['gRVjAtPip0Y','How to Perform Bench Press - Tutorial & Proper Form','Buff Dudes'],
-    c:['Eyes under the bar, feet flat, shoulder blades squeezed together and down. Grip just wider than shoulders.',
-       'Unrack, lower the bar under control to mid/lower chest (elbows ~45° from your sides), then press up and slightly back over your shoulders.',
-       'Chest and triceps doing the work; upper back stays tight against the bench.',
-       'Bouncing the bar off your chest, flaring elbows straight out, or lifting your butt off the bench.'],
-    tip:'Start with the empty bar (45 lb) or dumbbells. Always use safety arms or a spotter. Machine chest press is a great substitute while you learn.'},
-  'Incline DB press':{m:'Upper chest · front delts · triceps',v:['8iPEnn-ltC8','How To: Dumbbell Incline Chest Press','ScottHermanFitness'],
-    c:['Bench at 30–45°. Sit with dumbbells on your thighs, kick them up one at a time as you lie back; pinch shoulder blades.',
-       'Press up over your upper chest, then lower slowly until the dumbbells are about chest level, elbows slightly tucked.',
-       'A stretch across the upper chest at the bottom; upper chest and front shoulders working.',
-       'Bench too steep (turns it into a shoulder press) or clanging the dumbbells together at the top.'],
-    tip:'Pick a weight you can control for every rep: start lighter than you think. Machine incline press or incline push-ups are easy alternatives.'},
-  'Seated cable row':{m:'Mid-back · lats · biceps',v:['GZbfZ033f74','How To: Seated Low Row (LF Cable)','ScottHermanFitness'],
-    c:['Feet on the platform, knees slightly bent, sit tall with chest up and arms long holding the handle.',
-       'Pull the handle to your belly button by driving elbows back, squeeze shoulder blades together, then let your arms extend slowly.',
-       'Muscles around and between your shoulder blades and your lats, not your lower back.',
-       'Rocking your torso back and forth to move the weight, or shrugging shoulders up to your ears.'],
-    tip:'Keep your torso nearly still. If you have to swing, lower the weight. A seated row machine with a chest pad is an easy alternative.'},
-  'Overhead DB press':{m:'Shoulders · triceps',v:['qEwKCR5JCog','How To: Dumbbell Shoulder Press','ScottHermanFitness'],
-    c:['Sit on an upright bench with back support, dumbbells at shoulder height, palms forward, core braced.',
-       'Press up until arms are nearly straight overhead, then lower with control to about ear/chin level.',
-       'Front and side shoulders plus triceps.',
-       'Arching your lower back off the pad or banging the dumbbells together at the top.'],
-    tip:'Seated with back support is the most beginner-friendly version. A shoulder press machine is a great substitute.'},
-  'Lateral raises':{m:'Side delts',v:['3VcKaXpzqRo','How To: Dumbbell Side Lateral Raise','ScottHermanFitness'],
-    c:['Stand tall with light dumbbells at your sides, a slight bend in the elbows, leaning a touch forward.',
-       'Raise arms out to the sides to shoulder height, leading with the elbows, pause, then lower slowly (2–3 s).',
-       'The side of your shoulders burning, not your neck or traps.',
-       'Swinging with momentum, going too heavy, or shrugging toward your ears.'],
-    tip:'Go light: 5–15 lb is normal here! Cable lateral raises or the lateral raise machine are good alternatives.'},
-  'Triceps rope pushdown':{m:'Triceps',v:['qHDrQglWgS4','How to Perform Cable Rope Pushdown | Triceps Exercise Tutorial','Buff Dudes Workouts'],
-    c:['Rope at the top of the cable, stand close with a slight forward lean, elbows pinned at your sides.',
-       'Push the rope down until arms are straight, spread the rope ends apart at the bottom, return slowly until forearms are about parallel to the floor.',
-       'Back of the upper arm (triceps).',
-       'Elbows drifting forward/up or leaning your body weight into the stack.'],
-    tip:'Only your forearms should move. A straight-bar attachment or a triceps machine works too.'},
-  'Back squat':{m:'Quads · glutes · core',v:['7v_V6xiA_AA','How to Perform A Back Squat','Squat University'],
-    c:['Bar on your upper back (not your neck), rack at mid-chest height. Feet shoulder-width, toes slightly out. Big breath, brace your core.',
-       'Sit down between your hips with knees tracking over your toes, to about thighs parallel (or as deep as your back stays neutral), then drive up through the whole foot.',
-       'Quads and glutes working; torso tight and chest proud the whole rep.',
-       'Knees caving inward, heels lifting, or your lower back rounding at the bottom.'],
-    tip:'Learn with a goblet squat or the empty bar first, and set the rack safety pins just below your bottom position. Leg press or a Smith machine squat are alternatives.'},
-  'Romanian deadlift':{m:'Hamstrings · glutes · lower back',v:['_oyxCn2iSjU','HOW TO DO ROMANIAN DEADLIFTS (RDLs): Build Beefy Hamstrings With Perfect Technique','Jeff Nippard'],
-    c:['Stand holding the bar (or dumbbells) at your thighs, feet hip-width, soft knees, shoulders back.',
-       'Push your hips BACK and slide the weight down your thighs with a flat back until you feel a strong hamstring stretch (usually around mid-shin); squeeze glutes to stand up.',
-       'A big stretch in the hamstrings, with your glutes finishing the rep.',
-       'Rounding your back, or bending the knees so much it turns into a squat.'],
-    tip:'Start with dumbbells and check a side view in the mirror. Practice the hip hinge with a broomstick along your spine. Substitute: 45° back extension.'},
-  'Leg press':{m:'Quads · glutes',v:['oujca3_Shgw','How To: Leg Press (Cybex)','ScottHermanFitness'],
-    c:['Back and hips flat against the pad, feet shoulder-width in the middle of the platform.',
-       'Release the safeties, lower the sled until knees are about 90° (without your hips curling off the pad), then press back up through the whole foot.',
-       'Quads and glutes.',
-       'Snapping your knees locked at the top, or letting your lower back lift off the seat at the bottom.'],
-    tip:'Start light and keep the safety handles within reach. Feet higher on the platform = more glutes; lower = more quads.'},
-  'Leg curl':{m:'Hamstrings',v:['t9sTSr-JYSs','Beginner\'s Guide: Seated Leg Curl','SilverSneakers'],
-    c:['Adjust the machine so your knees line up with its pivot point and the pad sits just above your heels.',
-       'Curl your heels toward your butt, squeeze for 1 s, then return slowly (2–3 s) to straight legs.',
-       'Back of your thighs (hamstrings).',
-       'Jerking the weight with momentum, or lifting your hips off the pad (lying version).'],
-    tip:'Seated or lying machines both work. The slow lowering is where most of the benefit is.'},
-  'Standing calf raise':{m:'Calves',v:['YMmgqO8Jo-k','How To: Standing Calf (BM)','ScottHermanFitness'],
-    c:['Balls of your feet on the edge of the platform, heels hanging, legs straight but not locked.',
-       'Lower your heels into a deep stretch, pause 1 s, then rise as high as you can onto your toes and pause 1 s at the top.',
-       'Calves burning, especially with slow reps.',
-       'Fast, bouncy half-reps.'],
-    tip:'No machine? Do them on a step holding a dumbbell, with a hand on a rail for balance. Leg-press calf raises also work.'},
-  'Plank':{m:'Core (abs, obliques)',v:['EtO0CutfR8Y','How to do a PROPER Plank','Mind Pump TV'],
-    c:['Forearms on the floor, elbows under shoulders, legs straight, feet hip-width.',
-       'Squeeze your glutes and brace your abs so your body is a straight line from head to heels; keep breathing and hold.',
-       'Abs working hard; shoulders stable.',
-       'Hips sagging (strains your low back) or piking your hips up high.'],
-    tip:'Too hard? Plank from your knees or with hands on a bench, and build up in 10–15 s chunks.'},
-  'Lat pulldown':{m:'Lats · upper back · biceps',v:['an1BMInTXLk','How To Actually Target Your Lats With The Lat Pulldown!','Mind Pump TV'],
-    c:['Thighs locked under the pads, grip slightly wider than shoulders, sit tall with a slight lean back.',
-       'Pull the bar to your upper chest by driving your elbows down toward your ribs, then let it rise under control to a full stretch.',
-       'Lats: the sides of your back, under your armpits.',
-       'Leaning way back and yanking, or pulling the bar behind your neck.'],
-    tip:'Think "elbows to back pockets." This is the best way to build up to pull-ups; a neutral-grip handle is easier on the shoulders.'},
-  'Chest-supported row':{m:'Upper back · lats · rear delts',v:['H75im9fAUMc','Chest-Supported Row','Men\'s Health'],
-    c:['Chest on an incline bench (30–45°) or machine pad, dumbbells hanging straight down.',
-       'Row the weights up by driving your elbows back toward your hips, squeeze shoulder blades for 1 s, lower slowly.',
-       'Mid/upper back between your shoulder blades.',
-       'Lifting your chest off the pad to heave the weight, or shrugging.'],
-    tip:'The chest support protects your lower back, which makes it great for beginners. A T-bar or seated row machine is a good swap.'},
-  'Incline bench or machine press':{m:'Upper chest · front delts · triceps',v:['jPLdzuHckI8','Incline Barbell Press | Upper Chest | How-To Exercise Tutorial','Buff Dudes Workouts'],
-    alt:['n8TOta_pfr4','How to Use a Chest Press Machine','LIVESTRONG','Machine version'],
-    c:['Bench at about 30°, eyes under the bar, shoulder blades tucked, feet planted. On a machine: set the seat so the handles line up with your mid/upper chest.',
-       'Lower the bar to your upper chest (just below the collarbone) under control, then press straight up.',
-       'Upper chest and triceps.',
-       'Bouncing the bar, flaring your elbows out to 90°, or arching off the bench.'],
-    tip:'The machine press is the easiest to learn and safest without a spotter. Start there if you\'re unsure.'},
-  'Face pulls':{m:'Rear delts · upper back · rotator cuff',v:['eFxMixk_qPQ','Rope Face Pull','Men\'s Health'],
-    c:['Rope at upper-chest to face height. Grip with thumbs pointing back toward you, step back until your arms are straight.',
-       'Pull the rope toward your face, splitting the ends apart and finishing with hands beside your ears (like a double-biceps pose); return slowly.',
-       'Back of your shoulders and between your shoulder blades.',
-       'Going heavy and leaning back. This is a light, controlled posture exercise.'],
-    tip:'Light weight, slow reps, 1 s pause. Band pull-aparts or the reverse pec-deck are alternatives.'},
-  'DB curls':{m:'Biceps',v:['sAq_ocpRh_I','How To: Alternating Dumbbell Curl','ScottHermanFitness'],
-    c:['Stand tall, dumbbells at your sides, palms forward, elbows by your ribs.',
-       'Curl up by bending only at the elbow, squeeze at the top, lower slowly to a full arm extension.',
-       'Front of the upper arm (biceps).',
-       'Swinging your torso or letting your elbows drift forward.'],
-    tip:'Alternate arms or sit on a bench to stop swinging. Cable curls or the biceps curl machine are good swaps.'},
-  'Hammer curls':{m:'Biceps · brachialis · forearms',v:['BRVDS6HVR9Q','How To Perform HAMMER CURLS | Biceps Exercise Tutorial','Buff Dudes Workouts'],
-    c:['Stand tall, dumbbells at your sides with palms facing each other (neutral grip).',
-       'Curl up keeping your palms facing in and elbows pinned, then lower slowly.',
-       'Biceps and the outer forearm.',
-       'Swinging the weights or shrugging your shoulders.'],
-    tip:'A cable rope curl is an easy alternative.'},
-  'Trap-bar or conventional deadlift':{m:'Glutes · hamstrings · back · grip',v:['EsqwERaSTMI','How To Trap Bar Deadlift *Build Strength And Size* | Form Check | Men\'s Health Muscle','Men’s Health Muscle'],
-    alt:['r4MzxtBKyNE','How To Perfect Your Deadlift | Form Check | Men\'s Health','Men\'s Health','Conventional version'],
-    c:['Stand in the middle of the trap bar (or with the barbell over mid-foot). Hinge down and grip, chest up, flat back, pull the slack out of the bar, big breath and brace.',
-       'Push the floor away with your legs and stand up tall, hips and shoulders rising together. Lower by pushing your hips back along the same path.',
-       'Legs and glutes driving, upper back tight, hamstrings loaded.',
-       'A rounded lower back, jerking the bar off the floor, or leaning back at the top.'],
-    tip:'The trap bar (use the high handles) is the most beginner-friendly version. Start light: 5 clean reps beat heavy ugly ones. End each set about 2 reps before your form would break.'},
-  'Bulgarian split squat':{m:'Quads · glutes',v:['7Aqeb8UHl4k','Bulgarian Split Squat','Men\'s Health'],
-    c:['Stand about 2 ft in front of a bench, top of your rear foot on the bench, most of your weight on the front leg.',
-       'Lower straight down until your back knee nearly touches the floor, then drive up through your front heel.',
-       'Front-leg quad and glute, plus a stretch in the rear hip.',
-       'Front foot too close to the bench (knee pain) or pushing off with the back leg.'],
-    tip:'Start with body weight and hold a rack or wall for balance. A regular split squat (back foot on the floor) or reverse lunge is easier.'},
-  'Hip thrust':{m:'Glutes · hamstrings',v:['pBH7pKHn-dI','How to Perform Barbell Hip Thrusts | Glutes Exercise Tutorial','Buff Dudes Workouts'],
-    c:['Upper back (just below the shoulder blades) against a bench, padded bar over your hips, feet flat about hip-width.',
-       'Tuck your chin and drive through your heels to raise your hips until your body is flat like a table (shins vertical); squeeze glutes 1–2 s, lower with control.',
-       'Glutes, not your lower back or hamstrings.',
-       'Arching your lower back at the top or pushing through your toes.'],
-    tip:'Learn with floor glute bridges or a hip thrust machine first, and always use a bar pad.'},
-  'Leg extension':{m:'Quads',v:['ljO4jkwv8wQ','How To Do Leg Extensions With Perfect Technique (Grow Every Quad Head)','Jeff Nippard'],
-    c:['Line your knee up with the machine\'s pivot, pad on your lower shins, back against the seat, hold the handles.',
-       'Straighten your legs, squeeze your quads for 1 s, then lower slowly (2–3 s).',
-       'Front of your thighs.',
-       'Kicking the weight up or lifting your butt off the seat.'],
-    tip:'A good beginner exercise. Start light if your knees are sensitive.'},
-  'Seated calf raise':{m:'Calves (soleus)',v:['JbyjNymZOt0','How to Do Seated Calf Raises','LIVESTRONG'],
-    c:['Balls of your feet on the platform, pad snug on your lower thighs just above the knees.',
-       'Lower your heels for a full stretch, pause, then push up as high as possible and pause at the top.',
-       'Lower calves.',
-       'Short, bouncy reps.'],
-    tip:'No machine? Sit on a bench with a dumbbell on your knees and your toes on a weight plate.'},
-  'Hanging knee raise':{m:'Lower abs · hip flexors · grip',v:['X-ACS9vpRyU','How To: Hanging Knee / Leg Raise | BUILD A “SCIENCED BASED” 6-PACK!','ScottHermanFitness'],
-    c:['Hang from a pull-up bar with straight arms, shoulders engaged (not shrugged), legs together.',
-       'Bring your knees up toward your chest while curling your pelvis up, then lower slowly without swinging.',
-       'Lower abs.',
-       'Swinging and using momentum.'],
-    tip:'Use the captain\'s chair (forearm supports), or do lying reverse crunches if grip or swinging is a problem.'},
-  'DB bench':{m:'Chest · front delts · triceps',v:['VmB1G1K7v94','How To: Dumbbell Chest Press','ScottHermanFitness'],
-    c:['Sit with dumbbells on your thighs, lie back and kick them up. Feet flat, shoulder blades pinched.',
-       'Lower the dumbbells to the sides of your chest (elbows about 45°), then press up and slightly together.',
-       'A chest stretch at the bottom, chest and triceps doing the pressing.',
-       'Dropping the weights too fast or letting your wrists bend back.'],
-    tip:'To finish, bring the dumbbells to your chest and rock up to sitting with them on your thighs. Machine chest press is an alternative.'},
-  'Pull-ups or assisted':{m:'Lats · upper back · biceps',v:['wFj808u2HWU','How To Use The Assisted Pull Up Machine','PureGym'],
-    alt:['eGo4IYlbE5g','The Perfect Pull Up - Do it right!','Calisthenicmovement','Unassisted pull-up'],
-    c:['Grip slightly wider than shoulders. On the assisted machine, kneel on the pad: more counterweight = more help.',
-       'From a dead hang, pull your chest toward the bar by driving your elbows down, then lower all the way under control.',
-       'Lats and upper back.',
-       'Kicking/kipping or doing half reps.'],
-    tip:'AMRAP = as many good reps as possible. Start assisted (or with lat pulldowns). Next steps: band-assisted reps, then negatives (jump up, lower in 3–5 s).'},
-  'Goblet squat':{m:'Quads · glutes · core',v:['MeIiIdhvXT4','How To: Goblet Squat','ScottHermanFitness'],
-    c:['Hold one dumbbell or kettlebell vertically at your chest, elbows under it. Feet shoulder-width, toes slightly out.',
-       'Sit down between your heels keeping your chest up (elbows inside your knees at the bottom), then stand up through the whole foot.',
-       'Quads and glutes, with your core working to keep you upright.',
-       'Heels rising or knees caving in.'],
-    tip:'The best squat for learning. Squat down to a box or bench if depth is tough.'},
-  'Cable row':{m:'Mid-back · lats · biceps',v:['sP_4vybjVJs','How To Properly Do The Seated Cable Row (IT MATTERS!)','Mind Pump TV'],
-    c:['Sit tall with a slight knee bend, arms extended holding the handle, core braced.',
-       'Row to your stomach leading with your elbows, pause and squeeze, then return with control, letting your shoulders reach forward slightly.',
-       'Mid-back and lats working together.',
-       'Using your lower back to swing the weight.'],
-    tip:'Try different handles (V-grip, wide bar) to find what feels best. A plate-loaded or selectorized row machine is an alternative.'},
-  'Intervals: bike or rower':{m:'Heart & lungs (conditioning)',v:['Rh8VswzWDow','How To Do A HIIT On An Exercise Bike | The Body Coach','The Body Coach TV by Joe Wicks'],
-    alt:['4zWu1yuJ0_g','Correct Rowing Machine Technique, Improve Your Rowing | Concept2','concept2usa','Rower technique'],
-    c:['Bike: seat at hip height so your knee is slightly bent at the bottom. Rower: straps across the widest part of your foot, damper around 3–5.',
-       'Warm up 3–5 min easy, then repeat 30 s hard / 90 s easy for 15–20 min, and cool down for 3 min.',
-       'Breathing hard during the 30 s pushes (about 7–8/10 effort), recovering during the easy part.',
-       'Starting too hard. On the rower: pulling with your arms first. It\'s legs → body → arms, then reverse on the way back.'],
-    tip:'Start with 6–8 rounds of 20 s hard and build up. Any cardio machine works (elliptical, incline treadmill). If you\'re new to hard cardio, ask your doctor what intensity is safe for you.'},
-  'Incline walk':{m:'Heart & lungs · legs · glutes',v:['NAsObfFJXvE','How To: Incline Treadmill Walk (12-3-30 Workout)','Live Lean TV Daily Exercises'],
-    c:['Treadmill at 3–8% incline, speed 2.5–3.5 mph (start easier).',
-       'Walk tall with a natural arm swing and full foot contact, at a steady pace for 20–30 min.',
-       'Warm and breathing harder, but still able to talk (conversation pace).',
-       'Holding the handrails. It cuts the work and hurts your posture, so lower the incline or speed instead.'],
-    tip:'Build up the incline over weeks. The video\'s "12-3-30" (12% incline, 3 mph, 30 min) is a goal, not a starting point. Outdoors: hills or brisk walking count too.'}
+  "Bench press":{"m":"Chest · front delts · triceps","v":["gRVjAtPip0Y","How to Perform Bench Press - Tutorial & Proper Form","Buff Dudes"],"c":["Eyes under the bar, feet flat, shoulder blades squeezed together and down. Grip just wider than shoulders.","Unrack, lower the bar under control to mid/lower chest (elbows ~45° from your sides), then press up and slightly back over your shoulders.","Chest and triceps doing the work; upper back stays tight against the bench.","Bouncing the bar off your chest, flaring elbows straight out, or lifting your butt off the bench."],"tip":"Start with the empty bar (45 lb) or dumbbells. Always use safety arms or a spotter. Machine chest press is a great substitute while you learn.","e":"Barbell"},
+  "Incline DB press":{"m":"Upper chest · front delts · triceps","v":["8iPEnn-ltC8","How To: Dumbbell Incline Chest Press","ScottHermanFitness"],"c":["Bench at 30–45°. Sit with dumbbells on your thighs, kick them up one at a time as you lie back; pinch shoulder blades.","Press up over your upper chest, then lower slowly until the dumbbells are about chest level, elbows slightly tucked.","A stretch across the upper chest at the bottom; upper chest and front shoulders working.","Bench too steep (turns it into a shoulder press) or clanging the dumbbells together at the top."],"tip":"Pick a weight you can control for every rep: start lighter than you think. Machine incline press or incline push-ups are easy alternatives.","e":"Dumbbell"},
+  "Seated cable row":{"m":"Mid-back · lats · biceps","v":["GZbfZ033f74","How To: Seated Low Row (LF Cable)","ScottHermanFitness"],"c":["Feet on the platform, knees slightly bent, sit tall with chest up and arms long holding the handle.","Pull the handle to your belly button by driving elbows back, squeeze shoulder blades together, then let your arms extend slowly.","Muscles around and between your shoulder blades and your lats, not your lower back.","Rocking your torso back and forth to move the weight, or shrugging shoulders up to your ears."],"tip":"Keep your torso nearly still. If you have to swing, lower the weight. A seated row machine with a chest pad is an easy alternative.","e":"Cable"},
+  "Overhead DB press":{"m":"Shoulders · triceps","v":["qEwKCR5JCog","How To: Dumbbell Shoulder Press","ScottHermanFitness"],"c":["Sit on an upright bench with back support, dumbbells at shoulder height, palms forward, core braced.","Press up until arms are nearly straight overhead, then lower with control to about ear/chin level.","Front and side shoulders plus triceps.","Arching your lower back off the pad or banging the dumbbells together at the top."],"tip":"Seated with back support is the most beginner-friendly version. A shoulder press machine is a great substitute.","e":"Dumbbell"},
+  "Lateral raises":{"m":"Side delts","v":["3VcKaXpzqRo","How To: Dumbbell Side Lateral Raise","ScottHermanFitness"],"c":["Stand tall with light dumbbells at your sides, a slight bend in the elbows, leaning a touch forward.","Raise arms out to the sides to shoulder height, leading with the elbows, pause, then lower slowly (2–3 s).","The side of your shoulders burning, not your neck or traps.","Swinging with momentum, going too heavy, or shrugging toward your ears."],"tip":"Go light: 5–15 lb is normal here! Cable lateral raises or the lateral raise machine are good alternatives.","e":"Dumbbell"},
+  "Triceps rope pushdown":{"m":"Triceps","v":["qHDrQglWgS4","How to Perform Cable Rope Pushdown | Triceps Exercise Tutorial","Buff Dudes Workouts"],"c":["Rope at the top of the cable, stand close with a slight forward lean, elbows pinned at your sides.","Push the rope down until arms are straight, spread the rope ends apart at the bottom, return slowly until forearms are about parallel to the floor.","Back of the upper arm (triceps).","Elbows drifting forward/up or leaning your body weight into the stack."],"tip":"Only your forearms should move. A straight-bar attachment or a triceps machine works too.","e":"Cable"},
+  "Back squat":{"m":"Quads · glutes · core","v":["7v_V6xiA_AA","How to Perform A Back Squat","Squat University"],"c":["Bar on your upper back (not your neck), rack at mid-chest height. Feet shoulder-width, toes slightly out. Big breath, brace your core.","Sit down between your hips with knees tracking over your toes, to about thighs parallel (or as deep as your back stays neutral), then drive up through the whole foot.","Quads and glutes working; torso tight and chest proud the whole rep.","Knees caving inward, heels lifting, or your lower back rounding at the bottom."],"tip":"Learn with a goblet squat or the empty bar first, and set the rack safety pins just below your bottom position. Leg press or a Smith machine squat are alternatives.","e":"Barbell"},
+  "Romanian deadlift":{"m":"Hamstrings · glutes · lower back","v":["_oyxCn2iSjU","HOW TO DO ROMANIAN DEADLIFTS (RDLs): Build Beefy Hamstrings With Perfect Technique","Jeff Nippard"],"c":["Stand holding the bar (or dumbbells) at your thighs, feet hip-width, soft knees, shoulders back.","Push your hips BACK and slide the weight down your thighs with a flat back until you feel a strong hamstring stretch (usually around mid-shin); squeeze glutes to stand up.","A big stretch in the hamstrings, with your glutes finishing the rep.","Rounding your back, or bending the knees so much it turns into a squat."],"tip":"Start with dumbbells and check a side view in the mirror. Practice the hip hinge with a broomstick along your spine. Substitute: 45° back extension.","e":"Barbell"},
+  "Leg press":{"m":"Quads · glutes","v":["oujca3_Shgw","How To: Leg Press (Cybex)","ScottHermanFitness"],"c":["Back and hips flat against the pad, feet shoulder-width in the middle of the platform.","Release the safeties, lower the sled until knees are about 90° (without your hips curling off the pad), then press back up through the whole foot.","Quads and glutes.","Snapping your knees locked at the top, or letting your lower back lift off the seat at the bottom."],"tip":"Start light and keep the safety handles within reach. Feet higher on the platform = more glutes; lower = more quads.","e":"Machine"},
+  "Seated leg curl":{"m":"Hamstrings","v":["t9sTSr-JYSs","Beginner's Guide: Seated Leg Curl","SilverSneakers"],"c":["Adjust the machine so your knees line up with its pivot point, the thigh pad snug and the ankle pad just above your heels.","Curl your heels toward your butt, squeeze for 1 s, then return slowly (2–3 s) to straight legs.","Back of your thighs (hamstrings).","Jerking the weight with momentum, or lifting your hips off the pad (lying version)."],"tip":"Seated or lying machines both work. The slow lowering is where most of the benefit is.","e":"Machine"},
+  "Standing calf raise":{"m":"Calves","v":["YMmgqO8Jo-k","How To: Standing Calf (BM)","ScottHermanFitness"],"c":["Balls of your feet on the edge of the platform, heels hanging, legs straight but not locked.","Lower your heels into a deep stretch, pause 1 s, then rise as high as you can onto your toes and pause 1 s at the top.","Calves burning, especially with slow reps.","Fast, bouncy half-reps."],"tip":"No machine? Do them on a step holding a dumbbell, with a hand on a rail for balance. Leg-press calf raises also work.","e":"Machine"},
+  "Plank":{"m":"Core (abs, obliques)","v":["EtO0CutfR8Y","How to do a PROPER Plank","Mind Pump TV"],"c":["Forearms on the floor, elbows under shoulders, legs straight, feet hip-width.","Squeeze your glutes and brace your abs so your body is a straight line from head to heels; keep breathing and hold.","Abs working hard; shoulders stable.","Hips sagging (strains your low back) or piking your hips up high."],"tip":"Too hard? Plank from your knees or with hands on a bench, and build up in 10–15 s chunks.","e":"Bodyweight"},
+  "Lat pulldown":{"m":"Lats · upper back · biceps","v":["an1BMInTXLk","How To Actually Target Your Lats With The Lat Pulldown!","Mind Pump TV"],"c":["Thighs locked under the pads, grip slightly wider than shoulders, sit tall with a slight lean back.","Pull the bar to your upper chest by driving your elbows down toward your ribs, then let it rise under control to a full stretch.","Lats: the sides of your back, under your armpits.","Leaning way back and yanking, or pulling the bar behind your neck."],"tip":"Think \"elbows to back pockets.\" This is the best way to build up to pull-ups; a neutral-grip handle is easier on the shoulders.","e":"Machine"},
+  "Chest-supported row":{"m":"Upper back · lats · rear delts","v":["H75im9fAUMc","Chest-Supported Row","Men's Health"],"c":["Chest on an incline bench (30–45°) or machine pad, dumbbells hanging straight down.","Row the weights up by driving your elbows back toward your hips, squeeze shoulder blades for 1 s, lower slowly.","Mid/upper back between your shoulder blades.","Lifting your chest off the pad to heave the weight, or shrugging."],"tip":"The chest support protects your lower back, which makes it great for beginners. A T-bar or seated row machine is a good swap.","e":"Dumbbell"},
+  "Incline barbell press":{"m":"Upper chest · front delts · triceps","v":["jPLdzuHckI8","Incline Barbell Press | Upper Chest | How-To Exercise Tutorial","Buff Dudes Workouts"],"c":["Bench at about 30°, eyes under the bar, shoulder blades tucked, feet planted.","Lower the bar to your upper chest (just below the collarbone) under control, then press straight up.","Upper chest and triceps.","Bouncing the bar, flaring your elbows out to 90°, or arching off the bench."],"tip":"Use safeties or a spotter. The incline machine or Smith press are easy, safe swaps (tap Replace).","e":"Barbell"},
+  "Face pulls":{"m":"Rear delts · upper back · rotator cuff","v":["eFxMixk_qPQ","Rope Face Pull","Men's Health"],"c":["Rope at upper-chest to face height. Grip with thumbs pointing back toward you, step back until your arms are straight.","Pull the rope toward your face, splitting the ends apart and finishing with hands beside your ears (like a double-biceps pose); return slowly.","Back of your shoulders and between your shoulder blades.","Going heavy and leaning back. This is a light, controlled posture exercise."],"tip":"Light weight, slow reps, 1 s pause. Band pull-aparts or the reverse pec-deck are alternatives.","e":"Cable"},
+  "DB curls":{"m":"Biceps","v":["sAq_ocpRh_I","How To: Alternating Dumbbell Curl","ScottHermanFitness"],"c":["Stand tall, dumbbells at your sides, palms forward, elbows by your ribs.","Curl up by bending only at the elbow, squeeze at the top, lower slowly to a full arm extension.","Front of the upper arm (biceps).","Swinging your torso or letting your elbows drift forward."],"tip":"Alternate arms or sit on a bench to stop swinging. Cable curls or the biceps curl machine are good swaps.","e":"Dumbbell"},
+  "Hammer curls":{"m":"Biceps · brachialis · forearms","v":["BRVDS6HVR9Q","How To Perform HAMMER CURLS | Biceps Exercise Tutorial","Buff Dudes Workouts"],"c":["Stand tall, dumbbells at your sides with palms facing each other (neutral grip).","Curl up keeping your palms facing in and elbows pinned, then lower slowly.","Biceps and the outer forearm.","Swinging the weights or shrugging your shoulders."],"tip":"A cable rope curl is an easy alternative.","e":"Dumbbell"},
+  "Trap-bar deadlift":{"m":"Glutes · hamstrings · quads · back · grip","v":["EsqwERaSTMI","How To Trap Bar Deadlift *Build Strength And Size* | Form Check | Men's Health Muscle","Men’s Health Muscle"],"c":["Stand in the middle of the trap bar, hinge down and grip the high handles, chest up, flat back, pull the slack out of the bar, big breath and brace.","Push the floor away with your legs and stand up tall, hips and shoulders rising together. Lower by pushing your hips back along the same path.","Legs and glutes driving, upper back tight, hamstrings loaded.","A rounded lower back, jerking the bar off the floor, or leaning back at the top."],"tip":"The most beginner-friendly deadlift. Start light: 5 clean reps beat heavy ugly ones. End each set about 2 reps before your form would break.","e":"Barbell"},
+  "Bulgarian split squat":{"m":"Quads · glutes","v":["7Aqeb8UHl4k","Bulgarian Split Squat","Men's Health"],"c":["Stand about 2 ft in front of a bench, top of your rear foot on the bench, most of your weight on the front leg.","Lower straight down until your back knee nearly touches the floor, then drive up through your front heel.","Front-leg quad and glute, plus a stretch in the rear hip.","Front foot too close to the bench (knee pain) or pushing off with the back leg."],"tip":"Start with body weight and hold a rack or wall for balance. A regular split squat (back foot on the floor) or reverse lunge is easier.","e":"Dumbbell"},
+  "Hip thrust":{"m":"Glutes · hamstrings","v":["pBH7pKHn-dI","How to Perform Barbell Hip Thrusts | Glutes Exercise Tutorial","Buff Dudes Workouts"],"c":["Upper back (just below the shoulder blades) against a bench, padded bar over your hips, feet flat about hip-width.","Tuck your chin and drive through your heels to raise your hips until your body is flat like a table (shins vertical); squeeze glutes 1–2 s, lower with control.","Glutes, not your lower back or hamstrings.","Arching your lower back at the top or pushing through your toes."],"tip":"Learn with floor glute bridges or a hip thrust machine first, and always use a bar pad.","e":"Barbell"},
+  "Leg extension":{"m":"Quads","v":["ljO4jkwv8wQ","How To Do Leg Extensions With Perfect Technique (Grow Every Quad Head)","Jeff Nippard"],"c":["Line your knee up with the machine's pivot, pad on your lower shins, back against the seat, hold the handles.","Straighten your legs, squeeze your quads for 1 s, then lower slowly (2–3 s).","Front of your thighs.","Kicking the weight up or lifting your butt off the seat."],"tip":"A good beginner exercise. Start light if your knees are sensitive.","e":"Machine"},
+  "Seated calf raise":{"m":"Calves (soleus)","v":["JbyjNymZOt0","How to Do Seated Calf Raises","LIVESTRONG"],"c":["Balls of your feet on the platform, pad snug on your lower thighs just above the knees.","Lower your heels for a full stretch, pause, then push up as high as possible and pause at the top.","Lower calves.","Short, bouncy reps."],"tip":"No machine? Sit on a bench with a dumbbell on your knees and your toes on a weight plate.","e":"Machine"},
+  "Hanging knee raise":{"m":"Lower abs · hip flexors · grip","v":["X-ACS9vpRyU","How To: Hanging Knee / Leg Raise | BUILD A “SCIENCED BASED” 6-PACK!","ScottHermanFitness"],"c":["Hang from a pull-up bar with straight arms, shoulders engaged (not shrugged), legs together.","Bring your knees up toward your chest while curling your pelvis up, then lower slowly without swinging.","Lower abs.","Swinging and using momentum."],"tip":"Use the captain's chair (forearm supports), or do lying reverse crunches if grip or swinging is a problem.","e":"Bodyweight"},
+  "DB bench press":{"m":"Chest · front delts · triceps","v":["VmB1G1K7v94","How To: Dumbbell Chest Press","ScottHermanFitness"],"c":["Sit with dumbbells on your thighs, lie back and kick them up. Feet flat, shoulder blades pinched.","Lower the dumbbells to the sides of your chest (elbows about 45°), then press up and slightly together.","A chest stretch at the bottom, chest and triceps doing the pressing.","Dropping the weights too fast or letting your wrists bend back."],"tip":"To finish, bring the dumbbells to your chest and rock up to sitting with them on your thighs. Machine chest press is an alternative.","e":"Dumbbell"},
+  "Pull-ups or assisted":{"m":"Lats · upper back · biceps","v":["wFj808u2HWU","How To Use The Assisted Pull Up Machine","PureGym"],"alt":["eGo4IYlbE5g","The Perfect Pull Up - Do it right!","Calisthenicmovement","Unassisted pull-up"],"c":["Grip slightly wider than shoulders. On the assisted machine, kneel on the pad: more counterweight = more help.","From a dead hang, pull your chest toward the bar by driving your elbows down, then lower all the way under control.","Lats and upper back.","Kicking/kipping or doing half reps."],"tip":"AMRAP = as many good reps as possible. Start assisted (or with lat pulldowns). Next steps: band-assisted reps, then negatives (jump up, lower in 3–5 s).","e":"Bodyweight"},
+  "Goblet squat":{"m":"Quads · glutes · core","v":["MeIiIdhvXT4","How To: Goblet Squat","ScottHermanFitness"],"c":["Hold one dumbbell or kettlebell vertically at your chest, elbows under it. Feet shoulder-width, toes slightly out.","Sit down between your heels keeping your chest up (elbows inside your knees at the bottom), then stand up through the whole foot.","Quads and glutes, with your core working to keep you upright.","Heels rising or knees caving in."],"tip":"The best squat for learning. Squat down to a box or bench if depth is tough.","e":"Dumbbell"},
+  "Intervals: bike or rower":{"m":"Heart & lungs (conditioning)","v":["Rh8VswzWDow","How To Do A HIIT On An Exercise Bike | The Body Coach","The Body Coach TV by Joe Wicks"],"alt":["4zWu1yuJ0_g","Correct Rowing Machine Technique, Improve Your Rowing | Concept2","concept2usa","Rower technique"],"c":["Bike: seat at hip height so your knee is slightly bent at the bottom. Rower: straps across the widest part of your foot, damper around 3–5.","Warm up 3–5 min easy, then repeat 30 s hard / 90 s easy for 15–20 min, and cool down for 3 min.","Breathing hard during the 30 s pushes (about 7–8/10 effort), recovering during the easy part.","Starting too hard. On the rower: pulling with your arms first. It's legs → body → arms, then reverse on the way back."],"tip":"Start with 6–8 rounds of 20 s hard and build up. Any cardio machine works (elliptical, incline treadmill). If you're new to hard cardio, ask your doctor what intensity is safe for you.","e":"Cardio"},
+  "Incline walk":{"m":"Heart & lungs · legs · glutes","v":["NAsObfFJXvE","How To: Incline Treadmill Walk (12-3-30 Workout)","Live Lean TV Daily Exercises"],"c":["Treadmill at 3–8% incline, speed 2.5–3.5 mph (start easier).","Walk tall with a natural arm swing and full foot contact, at a steady pace for 20–30 min.","Warm and breathing harder, but still able to talk (conversation pace).","Holding the handrails. It cuts the work and hurts your posture, so lower the incline or speed instead."],"tip":"Build up the incline over weeks. The video's \"12-3-30\" (12% incline, 3 mph, 30 min) is a goal, not a starting point. Outdoors: hills or brisk walking count too.","e":"Cardio"},
+  "Conventional deadlift":{"m":"Glutes · hamstrings · back · grip","e":"Barbell","v":["r4MzxtBKyNE","How To Perfect Your Deadlift | Form Check | Men's Health","Men's Health"],"c":["Bar over mid-foot, feet hip-width, grip just outside your legs; shins touch the bar, chest up, flat back, big breath and brace.","Push the floor away and stand up tall with the bar dragging up your legs; lower by pushing your hips back, bar close.","Legs and glutes driving, lats keeping the bar close, upper back tight.","Rounding your lower back, bar drifting away from your legs, or yanking it off the floor."],"tip":"Learn it light with perfect form. If your back complains, the trap-bar deadlift is a great permanent swap."},
+  "Machine chest press":{"m":"Chest · front delts · triceps","e":"Machine","v":["n8TOta_pfr4","How to Use a Chest Press Machine","LIVESTRONG"],"c":["Set the seat so the handles line up with mid-chest; feet flat, back against the pad.","Press the handles forward until arms are almost straight, then return slowly until you feel a chest stretch.","Chest doing most of the work, triceps finishing the press.","Shoulders rolling forward off the pad or letting the stack slam between reps."],"tip":"The easiest press to learn and safe to push hard without a spotter."},
+  "Pec deck":{"m":"Chest","e":"Machine","v":["H4mVGHaK2f4","How to PERFECT The Pec Deck | (CHEST FLY MISTAKES & TIPS)","Colossus Fitness"],"c":["Seat height so the handles are at chest level; slight bend in the elbows, back flat on the pad.","Bring the handles together in a wide hugging arc, squeeze 1 s, then open slowly to a comfortable stretch.","Inner and middle chest squeezing.","Letting the arms travel too far back or turning it into a press by bending the elbows a lot."],"tip":"Keep the weight moderate and the reps slow. It's a squeeze exercise, not a max-strength lift."},
+  "Cable fly":{"m":"Chest","e":"Cable","v":["8Um35Es-ROE","How To: Cable Fly (High-To-Low) || 3 GOLDEN RULES","ScottHermanFitness"],"c":["Pulleys at shoulder height or higher, one handle in each hand, a small step forward in a split stance.","With a soft bend in the elbows, bring your hands together in front of your chest in a wide arc, then open slowly.","Chest stretching as your arms open and squeezing as they meet.","Bending and straightening the elbows (turning it into a press) or using too much weight."],"tip":"Pec deck or DB flys are good substitutes. Think 'hug a big tree'."},
+  "Incline machine press":{"m":"Upper chest · front delts · triceps","e":"Machine","v":["ig0NyNlSce4","How To: Incline Chest Press (Hammer Strength)","ScottHermanFitness"],"c":["Set the seat so the handles start around upper-chest height; back against the pad.","Press up and forward until arms are nearly straight, lower slowly to a light stretch.","Upper chest and triceps working.","Lifting your hips or shrugging your shoulders up."],"tip":"Great option when you train alone. Controlled 2–3 s lowering on every rep."},
+  "Low-to-high cable fly":{"m":"Upper chest","e":"Cable","v":["eQ_NBB6OBH4","HOW TO: Chest \"Low-To-High\" Cable Fly (BIGGER UPPER CHEST) || PERFECT FORM","ScottHermanFitness"],"c":["Pulleys at the lowest setting, handles in hand, stand in the middle with a split stance.","Sweep your hands up and in to meet at upper-chest/chin height, elbows softly bent; lower slowly.","Upper chest squeezing at the top.","Leaning back or shrugging to lift the weight."],"tip":"Use light weight and pause 1 s at the top."},
+  "DB fly":{"m":"Chest","e":"Dumbbell","v":["eozdVDA78K0","How To: Dumbbell Flys On A Flat Bench","ScottHermanFitness"],"c":["Lie on a flat bench, dumbbells over your chest, palms facing each other, slight bend in elbows.","Open your arms in a wide arc until you feel a good chest stretch (about bench level), then hug them back up.","A strong stretch across the chest at the bottom.","Going too deep or too heavy, which stresses the shoulders."],"tip":"Keep it light (often half your DB press weight). Pec deck is a safer machine version."},
+  "Push-ups":{"m":"Chest · triceps · core","e":"Bodyweight","v":["IODxDxX7oi4","The Perfect Push Up | Do it right!","Calisthenicmovement"],"c":["Hands slightly wider than shoulders, body straight from head to heels, glutes and abs tight.","Lower your chest to just above the floor with elbows about 45° from your body, then push back up.","Chest and triceps working, core holding you straight.","Hips sagging, flaring elbows straight out, or doing half reps."],"tip":"Too hard? Put your hands on a bench or bar (incline push-up). 'AMRAP' = as many good reps as possible."},
+  "Smith machine bench press":{"m":"Chest · front delts · triceps","e":"Machine","v":["z_r6hDOYtO0","How To: Smith Machine- Bench Press","ScottHermanFitness"],"c":["Set the bench so the bar comes down to your mid/lower chest; set the safety stops just above chest height.","Unhook, lower the bar under control to your chest, press back up.","Chest and triceps working with the bar path guided for you.","Bench in the wrong spot so the bar lands on your neck or belly."],"tip":"A good stepping stone to the barbell bench: stable and easy to rack anytime."},
+  "Incline Smith press":{"m":"Upper chest · front delts · triceps","e":"Machine","v":["b8DqTO6ak0k","How To: Smith Machine- Incline Bench Press","ScottHermanFitness"],"c":["Incline bench at 30° under the Smith bar so the bar lands on your upper chest; set the safeties.","Unhook, lower to the upper chest, press straight up.","Upper chest and triceps.","Bench too steep (becomes a shoulder press) or bouncing off the chest."],"tip":"Check the bench position with an empty bar first."},
+  "Landmine press":{"m":"Upper chest · shoulders · triceps","e":"Barbell","v":["1G-_FTEkoNw","How to Perform Landmine Chest Press - Upper Chest Exercise","Buff Dudes"],"c":["One end of a barbell in a landmine (or corner), hold the other end at your chest, staggered stance.","Press the bar up and forward until your arm is straight, then lower back to the chest.","Upper chest and front shoulder, core stabilizing.","Leaning back a lot or shrugging."],"tip":"Very shoulder-friendly. Start with just the bar."},
+  "Seated DB overhead extension":{"m":"Triceps (long head)","e":"Dumbbell","v":["YbX7Wd8jQ-Q","How To: Dumbbell Seated Overhead Tricep Extension","ScottHermanFitness"],"c":["Sit on an upright bench, hold one dumbbell with both hands overhead, elbows pointing up.","Lower the dumbbell behind your head by bending only at the elbows, then straighten your arms.","A deep stretch in the back of the arms, then triceps squeezing.","Elbows flaring wide or arching your lower back."],"tip":"Start light: the stretch position is demanding. Cable overhead extension is a smooth alternative."},
+  "Overhead cable triceps extension":{"m":"Triceps (long head)","e":"Cable","v":["GzmlxvSFE7A","How to PROPERLY Overhead Cable Tricep Extension | Fix Your Tricep Extension Form NOW!","Colossus Fitness"],"c":["Rope on a low or mid pulley, face away, rope behind your head, staggered stance with a slight lean.","Extend your arms forward/up until straight, then let the rope come back behind your head slowly.","Stretch then squeeze in the back of the upper arms.","Moving your elbows around or using your back to push."],"tip":"Keep your elbows pointing forward and still; only the forearms move."},
+  "Straight-bar pushdown":{"m":"Triceps","e":"Cable","v":["_w-HpW70nSQ","HOW TO: Cable Triceps Pushdown || 3 Golden Rules (FOR GROWTH)","ScottHermanFitness"],"c":["Straight or angled bar on a high pulley, overhand grip, elbows at your sides, slight forward lean.","Push the bar down until your arms are straight, pause, return until forearms are about parallel to the floor.","Triceps working.","Elbows drifting forward or leaning over the bar to push with body weight."],"tip":"If your wrists complain, use the rope or a V-bar."},
+  "Close-grip bench press":{"m":"Triceps · chest","e":"Barbell","v":["nEF0bv2FW94","How To: Close-Grip Barbell Bench Press","ScottHermanFitness"],"c":["Lie on the bench, grip about shoulder-width (not closer), shoulder blades tucked.","Lower the bar to your lower chest with elbows close to your sides, press back up.","Triceps doing a lot of the work, plus chest.","Grip too narrow (wrist pain) or elbows flaring out."],"tip":"Use safeties or a spotter. Smith machine or close-grip push-ups are alternatives."},
+  "EZ-bar skull crusher":{"m":"Triceps","e":"Barbell","v":["d_KZxkY_0cM","How To: Skull Crushers","ScottHermanFitness"],"c":["Lie on a bench holding an EZ-bar over your shoulders with a narrow grip.","Bend only at the elbows to lower the bar toward your forehead/just behind your head, then straighten.","Triceps stretching and contracting.","Elbows flaring wide or letting the upper arms swing."],"tip":"Go light and slow. Lowering slightly behind the head is easier on the elbows."},
+  "Assisted dips":{"m":"Triceps · chest","e":"Machine","v":["yZ83t4mrPrI","Assisted Dip","Renaissance Periodization"],"c":["Set the counterweight (more weight = more help), kneel or stand on the pad, grip the handles with arms straight.","Lower until your upper arms are about parallel to the floor, then push back up to straight arms.","Triceps and lower chest.","Going too deep or letting shoulders roll forward and shrug up."],"tip":"Upright torso = more triceps; leaning forward = more chest. Stop if shoulders feel pinchy."},
+  "Triceps dip machine":{"m":"Triceps","e":"Machine","v":["EBnq0A5L_wo","How to PROPERLY Use The Tricep Dip Machine (TRY THIS)","Colossus Fitness"],"c":["Sit with the handles by your sides, back against the pad.","Push the handles down until your arms are straight, then return slowly until elbows are about 90°.","Triceps working.","Shrugging your shoulders up or rocking forward."],"tip":"A very beginner-friendly triceps builder."},
+  "Close-grip push-up":{"m":"Triceps · chest","e":"Bodyweight","v":["8_ILkbB9an8","How to PROPERLY Diamond Push-Up (Close Grip Push-Up) For Muscle Gain","Colossus Fitness"],"c":["Hands under your shoulders or slightly closer, body in a straight plank.","Lower with elbows brushing your ribs, then push back up.","Triceps burning, chest assisting.","Hands so close your wrists hurt, or sagging hips."],"tip":"Do them on a bench (incline) until you can do 10 on the floor."},
+  "Bench dips":{"m":"Triceps","e":"Bodyweight","v":["c3ZGl4pAwZ4","How To: Bench Dip","ScottHermanFitness"],"c":["Hands on the edge of a bench behind you, fingers forward, legs bent in front.","Lower by bending the elbows to about 90°, keeping your back close to the bench, then press up.","Triceps.","Dropping too low (strains the front of the shoulders)."],"tip":"Keep knees bent to make it easier. Skip it if your shoulders are cranky."},
+  "Barbell row":{"m":"Upper back · lats · biceps","e":"Barbell","v":["9efgcAjQe7E","How To: Barbell Bent-Over Row","ScottHermanFitness"],"c":["Hold the bar with an overhand grip, hinge forward to about 45° with a flat back, knees soft.","Row the bar to your lower ribs by driving elbows back, squeeze, lower under control.","Mid-back and lats working; hamstrings holding the hinge.","Standing up with each rep or rounding your back."],"tip":"Start light to own the hinge. Chest-supported rows take stress off the lower back."},
+  "One-arm DB row":{"m":"Lats · upper back · biceps","e":"Dumbbell","v":["roCP6wCXPqo","How to Perfect Your Dumbbell Row | Form Check | Men's Health","Men's Health"],"c":["One hand and knee on a bench, other foot on the floor, back flat, dumbbell hanging straight down.","Pull the dumbbell toward your hip, elbow close to your body, then lower all the way.","Lats (side of your back) and mid-back.","Twisting your torso to heave the weight up."],"tip":"Think 'elbow to back pocket'. A great back builder with minimal equipment."},
+  "Close-grip lat pulldown":{"m":"Lats · mid-back · biceps","e":"Machine","v":["ecRF8ERf2q4","Close Grip Front Lat Pulldown - Back Exercise - Bodybuilding.com","Bodybuilding.com"],"c":["Attach a close/neutral V-handle, thighs locked under the pads, sit tall.","Pull the handle to your upper chest, driving elbows down and back, then control it up to a full stretch.","Lats and between the shoulder blades.","Leaning way back or cutting the stretch short at the top."],"tip":"Neutral grips are usually the most comfortable for the shoulders."},
+  "T-bar row":{"m":"Mid-back · lats · traps","e":"Barbell","v":["j3Igk5nyZE4","How To: T-Bar Row","ScottHermanFitness"],"c":["Stand over the bar or machine, hinge forward with a flat back, grip the handles.","Row the handles to your chest/stomach, squeeze your shoulder blades, lower slowly.","Thick middle back working.","Rounding your back or jerking the weight."],"tip":"The chest-supported T-bar machine is easier on the lower back."},
+  "Straight-arm pulldown":{"m":"Lats","e":"Cable","v":["soX7zhZ7yfQ","Build your LATS with Straight Arm Pulldowns | Exercise Tutorial","Buff Dudes Workouts"],"c":["Bar or rope on a high pulley, step back, hinge slightly, arms nearly straight in front.","Sweep the bar down to your thighs keeping elbows almost straight, then let it rise slowly.","Lats working through a long arc; great mind-muscle connection.","Bending the elbows (turns into a pushdown) or using your body to swing."],"tip":"Light weight and a slow squeeze. Good warm-up for pulldowns too."},
+  "Machine row":{"m":"Mid-back · lats · biceps","e":"Machine","v":["TeFo51Q_Nsc","How To Use The Seated Row Machine","PureGym"],"c":["Adjust the seat so the handles are at mid-chest, chest against the pad.","Pull the handles back by driving your elbows, squeeze your shoulder blades, return slowly.","Middle back.","Lifting your chest off the pad or shrugging."],"tip":"Stable and simple: ideal for pushing close to failure safely."},
+  "Single-arm lat pulldown":{"m":"Lats","e":"Cable","v":["DU7m4f63gko","How to Single-Arm Lat Pulldown | Target Your Lower Lats","Physique Development"],"c":["Single handle on a high pulley, kneel or sit so your arm is fully stretched overhead.","Pull the elbow down toward your hip, then let the arm rise to a full stretch.","A strong lat contraction on one side.","Rotating your torso to finish the rep."],"tip":"Great for evening out left/right differences."},
+  "DB pullover":{"m":"Lats · chest","e":"Dumbbell","v":["tpLnfSQJ0gg","How To: Dumbbell Pull-Over","ScottHermanFitness"],"c":["Lie on a bench holding one dumbbell with both hands over your chest, elbows slightly bent.","Lower the dumbbell back behind your head in an arc until you feel a stretch, then pull it back over your chest.","Stretch in the lats and chest.","Bending the elbows a lot or going too heavy."],"tip":"Keep your ribs down; move only at the shoulders."},
+  "Inverted row":{"m":"Upper back · biceps","e":"Bodyweight","v":["11F_O_sZ1Z4","How to Perform the Inverted Row | Back | Exercise Tutorial","Buff Dudes Workouts"],"c":["Set a bar at waist height (Smith machine or rack), hang underneath with body straight, heels on the floor.","Pull your chest to the bar, squeeze, lower until arms are straight.","Upper back and rear shoulders.","Hips sagging or craning your neck to the bar."],"tip":"Easier with the bar higher or knees bent."},
+  "Reverse pec deck":{"m":"Rear delts · upper back","e":"Machine","v":["6yMdhi2DVao","How To Properly Use The Rear Delt Fly Machine (+ BONUS TIP)","Mind Pump TV"],"c":["Face the pec deck pad, handles set to the rear-delt position, arms straight in front.","Sweep your arms out and back to shoulder level, pause, return slowly.","Back of the shoulders.","Squeezing shoulder blades hard and shrugging (turns it into a trap exercise)."],"tip":"Light weight, higher reps (12–20)."},
+  "Rear delt DB fly":{"m":"Rear delts · upper back","e":"Dumbbell","v":["ttvfGg9d76c","How To: Dumbbell Bent-Over Raise","ScottHermanFitness"],"c":["Hinge forward (or lie chest-down on an incline bench) with light dumbbells hanging down.","Raise your arms out to the sides with a soft elbow bend until level with your torso, lower slowly.","Rear shoulders.","Swinging your torso or using heavy weights."],"tip":"Chest-supported on an incline bench makes it stricter and easier on the back."},
+  "DB shrug":{"m":"Upper traps","e":"Dumbbell","v":["cJRVVxmytaM","How To: Dumbbell Shrugs","ScottHermanFitness"],"c":["Stand tall holding dumbbells at your sides.","Lift your shoulders straight up toward your ears, hold 1 s, lower all the way.","Upper traps (between neck and shoulders).","Rolling your shoulders in circles or bending the elbows."],"tip":"Pause at the top. Straps help if grip gives out first."},
+  "Barbell shrug":{"m":"Upper traps","e":"Barbell","v":["NAqCVe2mwzM","How to Do a Standing Barbell Shrug | Back Workout","Howcast"],"c":["Hold a barbell at your thighs with an overhand grip about shoulder-width.","Shrug straight up, pause, lower under control.","Upper traps.","Using the legs to bounce the bar or rolling the shoulders."],"tip":"Use a rack at knee height to start safely."},
+  "Cable rear delt fly":{"m":"Rear delts","e":"Cable","v":["lq9K3lnHWKk","How To PROPERLY Perform a Standing Cable Rear Delt Fly","Colossus Fitness"],"c":["Set both pulleys at shoulder height, cross the cables (left hand holds right cable), step back.","Pull your arms apart and back in a wide arc, pause, return slowly.","Back of the shoulders.","Leaning back or shrugging."],"tip":"Can also be done with no handles, holding the cable balls."},
+  "Band pull-apart":{"m":"Rear delts · upper back","e":"Band","v":["3OYSIWaJJk4","The Band Pull-Apart for a Stronger Back","Men's Health"],"c":["Hold a light band at shoulder height, arms straight, hands shoulder-width.","Pull the band apart until it touches your chest, squeeze your shoulder blades, return slowly.","Upper back and rear shoulders.","Arching your back or shrugging."],"tip":"Perfect warm-up or home substitute for face pulls."},
+  "Smith machine shrug":{"m":"Upper traps","e":"Machine","v":["LI3b05LUdpA","How To PROPERLY Smith Machine Shrug | 3 Shoulder Shrug Variations for Muscle Gain","Colossus Fitness"],"c":["Set the bar at mid-thigh, grip just outside your thighs.","Unhook and shrug straight up, pause, lower fully.","Upper traps.","Bending the elbows or bouncing."],"tip":"The fixed path lets you focus on the squeeze."},
+  "Cable shrug":{"m":"Upper traps","e":"Cable","v":["Wab3-dsZohU","Cable Shrug - The Proper Lift - BPI Sports","BPI Sports"],"c":["Bar on a low pulley, stand close holding it at your thighs.","Shrug straight up, pause 1 s, lower slowly.","Upper traps.","Rolling your shoulders."],"tip":"Constant tension from the cable makes light weights effective."},
+  "EZ-bar curl":{"m":"Biceps","e":"Barbell","v":["zG2xJ0Q5QtI","How To: Inside-Grip Bicep Curl With E-Z Bar Curl","ScottHermanFitness"],"c":["Stand tall holding an EZ-bar on the angled grips, elbows at your sides.","Curl up by bending only at the elbows, squeeze, lower slowly to straight arms.","Biceps.","Swinging your back or elbows drifting forward."],"tip":"The angled grip is easier on the wrists than a straight bar."},
+  "Cable curl":{"m":"Biceps","e":"Cable","v":["NFzTWp2qpiE","How To Do Cable Bicep Curls - Full Video Tutorial and Step-by-Step Guide","Fit Father Project - Fitness For Busy Fathers"],"c":["Bar on a low pulley, stand close, elbows pinned at your sides.","Curl the bar up to your chest, squeeze, lower until arms are straight.","Biceps under constant tension.","Leaning back to move the weight."],"tip":"Good for slow, controlled reps and drop sets."},
+  "Incline DB curl":{"m":"Biceps (long head)","e":"Dumbbell","v":["soxrZlIl35U","How To: Seated Incline Dumbbell Bicep Curl","ScottHermanFitness"],"c":["Sit back on an incline bench (45–60°), arms hanging straight down, palms forward.","Curl the dumbbells up without moving your upper arms, lower slowly to a full stretch.","Big stretch then squeeze in the biceps.","Swinging the elbows forward."],"tip":"Go lighter than standing curls: the stretch makes it harder."},
+  "Cable rope hammer curl":{"m":"Biceps · brachialis · forearms","e":"Cable","v":["1Quc_tOv97I","How To: Rope Hammer Curl","ScottHermanFitness"],"c":["Rope on a low pulley, palms facing each other, elbows at your sides.","Curl the rope up toward your shoulders, squeeze, lower slowly.","Biceps and outer forearms.","Swinging or letting elbows travel forward."],"tip":"Keeps tension the whole rep. An easy swap for hammer curls."},
+  "Preacher curl":{"m":"Biceps","e":"Barbell","v":["Gydpcouclx8","Conquer the EZ-Bar Preacher Curl, Max Out Your Biceps","Men's Health"],"c":["Sit at the preacher bench, armpits snug on the top of the pad, hold an EZ-bar or use the machine.","Curl up, squeeze, lower slowly until arms are nearly straight.","Biceps, especially at the bottom stretch.","Dropping fast into the bottom or lifting your elbows off the pad."],"tip":"The machine preacher curl is a great beginner version."},
+  "Barbell curl":{"m":"Biceps","e":"Barbell","v":["JJB8XgKltA8","BARBELL CURLS | Biceps | How-To Exercise Tutorial","Buff Dudes Workouts"],"c":["Stand tall, shoulder-width underhand grip, elbows at your sides.","Curl the bar to your upper chest, squeeze, lower under control.","Biceps.","Rocking your hips/back to swing the bar."],"tip":"If wrists hurt, use the EZ-bar."},
+  "Concentration curl":{"m":"Biceps","e":"Dumbbell","v":["Jvj2wV0vOYU","How To: Dumbbell Concentration Curl","ScottHermanFitness"],"c":["Sit on a bench, elbow braced against the inside of your thigh, dumbbell hanging down.","Curl up toward your shoulder, squeeze hard, lower slowly.","A strong biceps peak contraction.","Moving the upper arm or leaning back."],"tip":"Great finisher; use a light weight and perfect reps."},
+  "Reverse curl":{"m":"Forearms · brachialis","e":"Barbell","v":["ypfd1kaI1AU","Reverse Curl Exercise Tutorial | Fast Track Forearm Growth With One Exercise","Buff Dudes Workouts"],"c":["Hold an EZ-bar or barbell with an overhand (palms down) grip, elbows at your sides.","Curl up keeping wrists straight, lower slowly.","Top of the forearms and outer upper arm.","Swinging, or letting your wrists bend."],"tip":"Use about half your normal curl weight."},
+  "Walking lunges":{"m":"Quads · glutes","e":"Dumbbell","v":["Pbmj6xPo-Hw","Walking Lunges Exercise Tutorial | Build Legendary Legs & Cardio","Buff Dudes Workouts"],"c":["Stand tall holding dumbbells (or no weight to start).","Take a long step, lower until the back knee nearly touches the floor, push through the front heel and step into the next lunge.","Front-leg quads and glutes.","Front knee caving in or short choppy steps."],"tip":"Learn them stationary (split squat) first. Hold a rail if balance is tricky."},
+  "Hack squat":{"m":"Quads · glutes","e":"Machine","v":["0tn5K9NlCfo","Hack Squat | Exercise Guide","Bodybuilding.com"],"c":["Back and shoulders against the pads, feet shoulder-width in the middle of the platform.","Release the safeties, squat down until thighs are about parallel or deeper, drive back up.","Quads working hard.","Heels lifting or knees caving in."],"tip":"Start with no plates to learn the depth. Leg press is a good alternative."},
+  "DB split squat":{"m":"Quads · glutes","e":"Dumbbell","v":["SGHnCftrZkA","Beginner's Guide: Split Squat","SilverSneakers"],"c":["Stand in a long staggered stance, dumbbells at your sides, back heel up.","Lower straight down until the back knee nearly touches the floor, drive up through the front foot.","Front-leg quads and glutes.","Front heel lifting or leaning far forward."],"tip":"Do all reps on one leg, then switch. Holding a rack with one hand is fine."},
+  "Smith machine squat":{"m":"Quads · glutes","e":"Machine","v":["AHnX-aimA4E","How To: Smith Machine- Squat","ScottHermanFitness"],"c":["Bar across your upper back, feet slightly in front of the bar, shoulder-width; set the safeties.","Sit down until thighs are about parallel, drive back up.","Quads and glutes.","Feet directly under the bar (pitches you forward) or knees caving."],"tip":"A stable way to squat heavy without a spotter."},
+  "Reverse lunge":{"m":"Quads · glutes","e":"Dumbbell","v":["SXYrUTUwFoc","How To Reverse Lunge","Mind Pump TV"],"c":["Stand tall with dumbbells at your sides.","Step one foot back, lower until the back knee nearly touches, push through the front heel to return.","Front-leg glutes and quads.","Leaning forward too much or pushing off with the back leg."],"tip":"Easier on the knees than forward lunges. Start with body weight."},
+  "Step-ups":{"m":"Quads · glutes","e":"Dumbbell","v":["aKj-6hgiViA","How To PROPERLY Perform Dumbbell Step Ups (GLUTE FOCUSED)","Colossus Fitness"],"c":["Box or bench at knee height, dumbbells in hand, whole foot on the box.","Drive through the top foot to stand up on the box, lower slowly back down.","Glutes and quads of the working leg.","Pushing off the bottom foot to cheat the rep."],"tip":"Use a lower step to start."},
+  "Sissy squat":{"m":"Quads","e":"Bodyweight","v":["VUiFlZ2FsKA","How To: Sissy Squat","ScottHermanFitness"],"c":["Hold a rack or post for balance, feet hip-width.","Rise onto your toes and lean back as your knees travel forward and down, then return.","Intense quad stretch and burn.","Going deeper than you can control."],"tip":"Use a sissy-squat bench or partial range at first."},
+  "Lying leg curl":{"m":"Hamstrings","e":"Machine","v":["1Tq3QdYUuHs","How To: Prone Leg Curl (Cybex)","ScottHermanFitness"],"c":["Lie face down, knees just off the bench edge, pad above your heels, hold the handles.","Curl your heels toward your butt, squeeze, lower slowly.","Hamstrings.","Hips lifting off the bench or kicking the weight up."],"tip":"Keep hips pressed down the whole time."},
+  "DB Romanian deadlift":{"m":"Hamstrings · glutes","e":"Dumbbell","v":["FQKfr1YDhEk","How To: Dumbbell Romanian Deadlift","ScottHermanFitness"],"c":["Stand holding dumbbells in front of your thighs, feet hip-width, soft knees.","Push your hips back and slide the dumbbells down your legs with a flat back until you feel a hamstring stretch, then squeeze your glutes to stand.","Big hamstring stretch.","Rounding your back or squatting down."],"tip":"The best way to learn the hip hinge before the barbell version."},
+  "Glute bridge":{"m":"Glutes · hamstrings","e":"Bodyweight","v":["8bbE64NuDTU","How To: Glute Bridge","ScottHermanFitness"],"c":["Lie on your back, knees bent, feet flat near your butt, arms by your sides.","Drive through your heels to lift your hips until your body is straight from knees to shoulders, squeeze, lower.","Glutes.","Arching your lower back instead of squeezing the glutes."],"tip":"Add a dumbbell or plate on the hips when it gets easy."},
+  "45° back extension":{"m":"Glutes · hamstrings · lower back","e":"Machine","v":["H8Swl1N-uis","STOP Doing Back Extensions Like This!","Squat University"],"c":["Set the pad just below your hip bones, feet locked in, body in a straight line.","Hinge down at the hips with a flat back, then raise back up until your body is straight again.","Glutes and hamstrings (rounding slightly shifts it to glutes).","Hyperextending (arching) past straight at the top."],"tip":"Hold a plate to your chest for extra resistance later."},
+  "Smith machine hip thrust":{"m":"Glutes","e":"Machine","v":["ADgWjz9i42Y","How to: Smith Machine Glute Bridge (Hip Thrust) | Grow Bigger Glutes w/ Minimal Setup","Physique Development"],"c":["Bench parallel to the Smith bar, upper back on the bench, padded bar over your hips.","Drive through your heels to lift your hips until flat, squeeze 1 s, lower.","Glutes.","Arching your low back at the top or feet too far away."],"tip":"The Smith setup is quicker than loading a barbell; always use a pad."},
+  "Hip abduction machine":{"m":"Glute medius · outer hips","e":"Machine","v":["OjI5OpV6IWA","How to PROPERLY Use The Abductor Machine (STOP DOING THIS)","Colossus Fitness"],"c":["Sit with pads on the outside of your knees, back against the seat.","Push your knees apart as far as comfortable, pause, return slowly.","Side of the hips/glutes.","Letting the weight slam back or rocking the body."],"tip":"Leaning slightly forward targets the glutes more."},
+  "Cable pull-through":{"m":"Glutes · hamstrings","e":"Cable","v":["DbSF7ipBh5Y","How to PROPERLY Perform a Glute Pull Through | Fix Your Cable Pull Through Form NOW!","Colossus Fitness"],"c":["Rope on a low pulley between your legs, face away, step forward, feet wider than hips.","Hinge your hips back letting the rope go between your legs, then drive hips forward to stand tall and squeeze.","Glutes and hamstrings.","Squatting instead of hinging or pulling with the arms."],"tip":"Great for learning the hinge with low back stress."},
+  "Stability ball leg curl":{"m":"Hamstrings · glutes","e":"Bodyweight","v":["WNB90xXLEOg","Build Your Hamstrings with the Stability Ball Leg Curl","Mind Pump TV"],"c":["Lie on your back with heels on a stability ball, lift your hips into a bridge.","Keeping hips up, curl the ball toward you, then roll it back out.","Hamstrings burning, glutes working.","Hips dropping during the curl."],"tip":"Start with just the bridge hold, then add curls."},
+  "Kettlebell swing":{"m":"Glutes · hamstrings · conditioning","e":"Kettlebell","v":["YSxHifyI6s8","Kettlebell Swing","Men's Health"],"c":["Kettlebell a foot in front, feet shoulder-width, hinge and grab it with both hands, flat back.","Hike it back between your legs, then snap your hips forward to float it to chest height; let it fall back into the next hinge.","Glutes and hamstrings powering it; arms just guide.","Squatting it up or lifting with your arms/shoulders."],"tip":"It's a hip hinge, not a squat. Start light (12–16 kg / 25–35 lb) and learn the hinge first."},
+  "Nordic hamstring curl":{"m":"Hamstrings","e":"Bodyweight","v":["6NCN6kOagfY","How to Do a Nordic Hamstring Curl","The Kneesovertoesguy"],"c":["Kneel on a pad with ankles anchored (partner or machine), body straight from knees to head.","Slowly lower your body forward as far as you can control, catch yourself with your hands, push back up.","Very intense hamstrings.","Bending at the hips instead of staying straight."],"tip":"Only do the lowering (negative) part at first, and just 3–5 reps."},
+  "Single-leg RDL":{"m":"Hamstrings · glutes · balance","e":"Dumbbell","v":["gz9l8UA_KXs","How to Perform Single Leg Romanian Deadlifts | Bodyweight Exercise Tutorial","Buff Dudes Workouts"],"c":["Stand on one leg holding a dumbbell in the opposite hand, soft knee.","Hinge forward, extending the free leg back, until your torso is near parallel, then return.","Hamstring and glute of the standing leg.","Twisting your hips open or rounding your back."],"tip":"Lightly touch a wall or rack for balance."},
+  "Good morning":{"m":"Hamstrings · glutes · lower back","e":"Barbell","v":["f23vXjoG2e8","HOW TO DO THE GOOD MORNING EXERCISE: Build Your Glutes, Hamstrings And Squat With Perfect Technique","Jeff Nippard"],"c":["Bar across your upper back like a squat, feet hip-width, soft knees.","Push your hips back and lean forward with a flat back until you feel a hamstring stretch, then stand up.","Hamstrings and glutes.","Rounding the back or going too heavy."],"tip":"Use a very light bar or a dowel to learn it."},
+  "Sumo deadlift":{"m":"Glutes · adductors · hamstrings · back","e":"Barbell","v":["cDlOSfu-zHY","How To Sumo Deadlift (The RIGHT Way) | Jordan Syatt","Mind Pump TV"],"c":["Wide stance, toes out, bar over mid-foot, grip inside your knees, chest up.","Push your knees out and the floor away to stand up tall, then lower the same path.","Glutes and inner thighs driving.","Hips shooting up first or knees caving in."],"tip":"Some people find sumo easier on the back; learn with light weight."},
+  "Single-leg hip thrust":{"m":"Glutes","e":"Bodyweight","v":["qCObDXTe4KY","How To Do A Single Leg Hip Thrust (Exercise Demo) - FREE Great Butt Guide","Mind Pump TV"],"c":["Upper back on a bench, one foot flat, the other leg lifted.","Drive through the planted heel to lift your hips level, squeeze, lower.","Glute of the working leg.","Hips rotating or low back arching."],"tip":"Master regular hip thrusts first."},
+  "Cable hip abduction":{"m":"Glute medius","e":"Cable","v":["1rbpTTzEnV4","How To: Hip Abduction (LF Cable)","ScottHermanFitness"],"c":["Ankle strap on a low pulley, stand side-on with the strap on the far leg, hold the machine.","Lift the leg out to the side, pause, return slowly.","Side of the hip.","Leaning your torso or swinging the leg."],"tip":"Small, controlled range is enough."},
+  "Banded lateral walk":{"m":"Glute medius","e":"Band","v":["M5uxEQH5BUM","How to do Lateral Band Walking","National Academy of Sports Medicine (NASM)"],"c":["Mini band above knees or around ankles, half-squat, feet hip-width.","Step sideways keeping tension on the band, 10–15 steps each way.","Side of the hips burning.","Standing up tall or letting feet snap together."],"tip":"Also a great warm-up before squats."},
+  "Side-lying hip abduction":{"m":"Glute medius","e":"Bodyweight","v":["-rDiQXjeXO0","Foolproof Guide to Side Lying Hip Abduction","[P]rehab"],"c":["Lie on your side, bottom knee bent, top leg straight in line with your body.","Lift the top leg up and slightly back, pause, lower slowly.","Side of the hip/glute.","Rolling your hips backward or lifting the leg forward."],"tip":"Add ankle weights or a band when it's easy."},
+  "Leg press calf raise":{"m":"Calves","e":"Machine","v":["PYZY00hI43w","How to PROPERLY Calf Raise on The Leg Press Machine (FIX THIS!)","Colossus Fitness"],"c":["Sit in the leg press, balls of your feet on the bottom edge of the platform, legs straight but not locked.","Lower your heels for a deep stretch, then press up onto your toes; pause at the top.","Calves.","Bouncy half reps or unlocking the safeties."],"tip":"Keep the safety handles engaged and move slowly."},
+  "Smith machine calf raise":{"m":"Calves","e":"Machine","v":["FNdI5TynYxs","How To Do A STANDING SMITH MACHINE CALF RAISE ON STEP | Exercise Demonstration Video and Guide","Live Lean TV Daily Exercises"],"c":["Stand on a step or plate under the Smith bar, bar across your upper back, balls of feet on the edge.","Lower your heels for a stretch, rise as high as possible, pause.","Calves.","Bending the knees to bounce."],"tip":"A step or plate lets your heels drop for a fuller range."},
+  "Single-leg calf raise":{"m":"Calves","e":"Bodyweight","v":["ORT4oJ_R8Qs","How To: Single-Leg Calf Raise","ScottHermanFitness"],"c":["Stand on one foot on a step, holding a rail, heel hanging.","Lower slowly, pause in the stretch, rise all the way up.","Calf of the working leg.","Fast bouncing reps."],"tip":"Hold a dumbbell once 15 reps is easy."},
+  "Machine shoulder press":{"m":"Shoulders · triceps","e":"Machine","v":["Wqq43dKW1TU","How To: Overhead Press (Cybex)","ScottHermanFitness"],"c":["Set the seat so the handles start at about shoulder height, back flat on the pad.","Press up until arms are nearly straight, lower slowly to shoulder level.","Front and side shoulders.","Arching off the pad or shrugging."],"tip":"The most beginner-friendly overhead press."},
+  "Barbell overhead press":{"m":"Shoulders · triceps · core","e":"Barbell","v":["F3QY5vMz_6I","How to Perform Overhead Press - Proper Technique & Form","Buff Dudes"],"c":["Bar at your upper chest, grip just outside shoulders, glutes and abs tight.","Press the bar straight up, moving your head back slightly then through once it passes, lock out overhead.","Shoulders and triceps; core holding you rigid.","Leaning back into a big arch."],"tip":"Start with an empty bar. Seated DB or machine press are alternatives."},
+  "Cable lateral raise":{"m":"Side delts","e":"Cable","v":["qitQHqNZbeM","How to PROPERLY Cable Lateral Raise (TRY THIS!)","Colossus Fitness"],"c":["Low pulley, stand side-on, hold the handle with the far hand, cable in front of your body.","Raise your arm out to the side to shoulder height, pause, lower slowly.","Side of the shoulder under constant tension.","Shrugging or leaning away a lot."],"tip":"Lighter than you think; 5–15 lb is common."},
+  "Arnold press":{"m":"Shoulders · triceps","e":"Dumbbell","v":["3ml7BH7mNwQ","How to do the Arnold Press","Men's Health"],"c":["Sit upright, dumbbells in front of your shoulders with palms facing you.","Press up while rotating palms to face forward at the top, reverse on the way down.","Front and side shoulders.","Rushing the rotation or arching your back."],"tip":"Use about 20% less weight than regular DB presses."},
+  "Smith machine shoulder press":{"m":"Shoulders · triceps","e":"Machine","v":["aKWQrB8afy0","How To Do A SMITH MACHINE SEATED SHOULDER PRESS | Exercise Demonstration Video and Guide","Live Lean TV Daily Exercises"],"c":["Upright bench under the Smith bar so it lowers in front of your face to chin level; set safeties.","Unhook, lower to chin height, press up.","Shoulders and triceps.","Bench too far forward (bar hits your nose) or arching."],"tip":"Check the bar path with an empty bar first."},
+  "Machine lateral raise":{"m":"Side delts","e":"Machine","v":["NNAs8jx_zJI","How to PROPERLY Lateral Raise Machine (STOP THIS)","Colossus Fitness"],"c":["Seat so your shoulders line up with the machine's pivot, pads on the outside of your arms.","Raise your arms out to the sides to shoulder height, pause, lower slowly.","Side shoulders.","Shrugging or jerking the weight up."],"tip":"Very beginner-friendly; smooth, controlled reps."},
+  "Lean-away lateral raise":{"m":"Side delts","e":"Dumbbell","v":["qWif_7SOYpQ","How To Perform the Leaning Lateral Raise | Shoulders Exercise Tutorial","Buff Dudes Workouts"],"c":["Hold a post or rack with one hand and lean away, dumbbell in the other hand.","Raise the dumbbell out to the side to shoulder height, lower slowly.","Side delt, especially at the bottom of the rep.","Swinging your body."],"tip":"Use a light dumbbell; the lean makes it harder."},
+  "Dead bug":{"m":"Deep core","e":"Bodyweight","v":["GbSC02oU3To","How to Do a Dead Bug: A Guide from Physical Therapists","Hinge Health"],"c":["Lie on your back, arms straight up, knees bent at 90° over your hips, low back pressed into the floor.","Slowly lower one arm and the opposite leg toward the floor, then return and switch sides.","Deep abs working to keep your back flat.","Low back arching off the floor."],"tip":"Breathe out as you extend. Smaller range is fine."},
+  "Cable crunch":{"m":"Abs","e":"Cable","v":["AV5PmZJIrrw","How to PROPERLY Cable Crunch to Shape Your Abs (How to Kneeling Cable Abdominal Crunch)","Colossus Fitness"],"c":["Kneel facing a high pulley, rope held beside your head.","Crunch down by curling your ribs toward your hips, pause, return slowly.","Abs contracting hard.","Just bending at the hips (sitting back) instead of curling the spine."],"tip":"Keep hips still; think 'ribs to pelvis'."},
+  "Pallof press":{"m":"Core (anti-rotation)","e":"Cable","v":["f3R99GoYvCs","How to do a Pallof Press","National Academy of Sports Medicine (NASM)"],"c":["Stand side-on to a cable at chest height, handle at your chest, feet shoulder-width.","Press the handle straight out and hold 1–2 s without letting it pull you around, bring it back.","Obliques and abs resisting the twist.","Twisting toward the machine or leaning."],"tip":"A resistance band works great at home."},
+  "Reverse crunch":{"m":"Lower abs","e":"Bodyweight","v":["hyv14e2QDq0","How To Do Reverse Crunches","LIVESTRONG"],"c":["Lie on your back, hands by your sides, knees bent at 90° above hips.","Curl your hips off the floor bringing knees toward your chest, lower slowly.","Lower abs.","Swinging the legs with momentum."],"tip":"A great step toward hanging knee raises."},
+  "Ab wheel rollout":{"m":"Abs · core","e":"Equipment","v":["rqiTPdK1c_I","Ab Wheel- How to PROPERLY Use an Ab Wheel | MIND PUMP","Mind Pump TV"],"c":["Kneel holding the ab wheel under your shoulders, abs braced, slight posterior pelvic tilt.","Roll forward as far as you can without your back arching, then pull back to the start.","Abs working hard to keep you from sagging.","Low back sagging or going too far too soon."],"tip":"Roll toward a wall to limit range while you build strength."},
+  "Side plank":{"m":"Obliques · core","e":"Bodyweight","v":["NXr4Fw8q60o","How to Do a Side Plank | Ab Workout","Howcast"],"c":["Lie on your side, elbow under shoulder, legs straight and stacked.","Lift your hips so your body is straight from head to feet; hold, breathing steadily.","Side of your core.","Hips sagging or rolling forward."],"tip":"Bend your knees to make it easier."},
+  "Bird dog":{"m":"Core · lower back · glutes","e":"Bodyweight","v":["xEDnlOxeJH4","How to Do the Bird Dog Exercise: A Guide from Physical Therapists","Hinge Health"],"c":["On hands and knees, hands under shoulders, knees under hips, back flat.","Reach one arm forward and the opposite leg back until level, pause, return; switch sides.","Core and glutes stabilizing.","Arching the back or rotating the hips."],"tip":"Move slowly; imagine a cup of water on your lower back."},
+  "Captain's chair knee raise":{"m":"Lower abs · hip flexors","e":"Machine","v":["7KDDZtaUaxw","How To Do A CAPTAIN'S CHAIR KNEE RAISE | Exercise Demonstration Video and Guide","Live Lean TV Daily Exercises"],"c":["Back against the pad, forearms on the arm rests, legs hanging.","Raise your knees toward your chest, curling your pelvis up, lower slowly.","Lower abs.","Swinging your legs."],"tip":"Easier than hanging because your arms are supported."},
+  "Lying leg raise":{"m":"Lower abs · hip flexors","e":"Bodyweight","v":["JB2oyawG9KI","How to Do Leg Raises","LIVESTRONG"],"c":["Lie on your back, hands under your hips, legs straight.","Raise your legs to vertical, then lower slowly without letting your low back arch.","Lower abs.","Arching your back or dropping legs fast."],"tip":"Bend your knees to make it easier."},
+  "Ab crunch machine":{"m":"Abs","e":"Machine","v":["_O1xunCfYEM","How To: Abdominal Crunch (Hammer Strength)","ScottHermanFitness"],"c":["Adjust the seat, hold the handles or pads, feet secured.","Crunch forward by curling your torso, pause, return slowly.","Abs contracting.","Pulling with your arms or using momentum."],"tip":"Easy to progress: just move the pin."},
+  "Stability ball crunch":{"m":"Abs","e":"Equipment","v":["Imui46JTe7s","How To: Ball Crunch","ScottHermanFitness"],"c":["Sit on a stability ball and walk forward until your low back is supported, feet wide.","Curl your ribs toward your hips, then stretch back over the ball.","Abs through a big range.","Pulling on your neck."],"tip":"Hands across your chest is easier than behind your head."},
+  "Suitcase carry":{"m":"Core (obliques) · grip","e":"Dumbbell","v":["tNHdx7pmrGI","Killer Core Strength With One Simple Movement | Suitcase Carry Exercise Tutorial","Buff Dudes Workouts"],"c":["Hold one heavy dumbbell or kettlebell at your side, stand tall.","Walk slowly for the set distance without leaning, switch hands.","Obliques on the opposite side working.","Leaning toward the weight."],"tip":"Start with a moderate weight; posture matters more than load."},
+  "Cable woodchop":{"m":"Obliques · core","e":"Cable","v":["pAplQXk3dkU","How To: Oblique Twist \"Wood Chopper\" (LF CAble)","ScottHermanFitness"],"c":["Cable high on one side, hold the handle with both hands, feet wide.","Pull diagonally down and across your body, rotating through your torso and pivoting your back foot, return slowly.","Obliques.","Pulling with arms only."],"tip":"Light weight, smooth rotation."},
+  "Sled push":{"m":"Legs · conditioning","e":"Equipment","v":["9XRRXaUpnLk","How To Do The Sled Push The RIGHT Way! (AVOID MISTAKES!)","Mind Pump TV"],"c":["Hands on the sled handles, arms slightly bent, body leaning forward at about 45°.","Drive with short, powerful steps for the set distance, then walk back to recover.","Legs burning, heart rate up.","Standing too upright or overloading the sled."],"tip":"Low impact, great for fat loss. No sled? Use stair climber or bike sprints."},
+  "Battle ropes":{"m":"Shoulders · arms · conditioning","e":"Equipment","v":["FInbOExDeU0","How to Use Battle Ropes The RIGHT Way (Maximize Your Training) | Overrated | Men's Health Muscle","Men’s Health Muscle"],"c":["Hold one rope end in each hand, feet shoulder-width, athletic half-squat.","Alternate arms making fast waves down the ropes for the work interval, then rest.","Shoulders and arms burning, heart rate up.","Standing up tall or holding your breath."],"tip":"Start with 20 s on / 40 s off."},
+  "Farmer's carry":{"m":"Grip · traps · core","e":"Dumbbell","v":["NH7Xv-7NQNQ","How To Perform Farmer Walks Exercise Tutorial","Buff Dudes Workouts"],"c":["Pick up two heavy dumbbells or kettlebells with a flat back.","Walk tall with short, quick steps, shoulders back and down, for the set distance.","Grip, traps and core working.","Leaning, shrugging, or rounding forward."],"tip":"Set the weights down safely by hinging, not bending your back."},
+  "Stair climber":{"m":"Legs · glutes · conditioning","e":"Machine","v":["6eMPlQ95gXI","How To Properly Use The Stepmill And Stair Climber","Live Lean TV Daily Exercises"],"c":["Step on, hold the rails lightly for balance only, stand tall.","Climb at a steady pace, full foot on each step; speed up for work intervals.","Glutes and legs working, breathing hard.","Leaning heavily on the rails."],"tip":"Start at a slow level; 5–10 min is plenty at first."},
+  "Elliptical":{"m":"Conditioning (low impact)","e":"Machine","v":["3pCdU1XkNm8","Proper Form on an Elliptical","LIVESTRONG"],"c":["Step on, hold the moving handles, stand tall.","Push and pull with arms and legs in a smooth rhythm; raise resistance for hard intervals.","Breathing harder, legs working.","Leaning on the handles or bouncing."],"tip":"Very joint-friendly cardio option."},
+  "Stationary bike":{"m":"Conditioning (low impact)","e":"Machine","v":["NwwDBARCGgo","How To Use The Stationary Bike","PureGym"],"c":["Seat at hip height so your knee is slightly bent at the bottom of the pedal stroke.","Pedal smoothly; add resistance for hard intervals, ease off for recovery.","Legs working, heart rate up.","Seat too low (knee pain) or bouncing in the saddle."],"tip":"Easiest cardio to control intensity on."},
+  "Jump rope":{"m":"Conditioning · calves","e":"Equipment","v":["u3zgHI8QnqE","How To Jump Rope | The Right Way | Well+Good","Well+Good"],"c":["Rope length: handles reach your armpits when you stand on the middle.","Small bounces on the balls of your feet, turn the rope with your wrists.","Calves and heart rate up.","Jumping too high or swinging from the shoulders."],"tip":"Start with 20–30 s intervals; skip it if your knees don't like impact."}
 };
+/* ================= 52-week periodized program =================
+   Classic body-part split. Every muscle is trained directly once and indirectly a second time
+   (chest/front delts via Thu pressing, triceps & biceps again Fri, quads via Fri lunges/split squats,
+   rear delts/upper back on Tue + Thu). Day entries: [name, sets, reps, rest, group]
+   group: 'A'/'B'/'C' = superset/circuit (A1, A2…), 'F' = conditioning finisher. */
+const PROGRAM_WEEKS = 52;
+const DAY_TITLES = {1:'Chest + Triceps',2:'Back + Biceps',3:'Legs (Quads) + Calves',4:'Shoulders + Abs',5:'Glutes & Hamstrings + Arms',6:'Active Recovery',0:'Rest + Check-in'};
+const DAY_SUBS = {1:'Push: chest & triceps',2:'Pull: lats, mid-back & biceps',3:'Quad focus + calves',4:'Delts, traps & core',5:'Posterior chain + arms',6:'Optional walk or easy cardio',0:'Recover · weekly check-in'};
+const DELOAD_RULES = ['Same exercises as last week, about half the sets (4→2, 3→2, 2→1).','Same weight as last week or ~10% lighter; stop ~4 reps short of failure (RIR 4).','No supersets, finishers or hard intervals. Easy walking only.','Sleep, protein and fluids first. Feeling flat is normal; strength rebounds next week.'];
+const PHASES = [
+ {id:'F',name:'Foundation',from:1,to:4,focus:'Learn the movements on machines & dumbbells, build the habit, prep joints and tendons.',sets:'3 × 10–12 (small muscles 2 × 12–15)',rest:'60–90 s',rir:[3,3,3,2],walk:'15–20 min easy incline walk after lifting',cardio:'Incline walk 15–20 min after lifting · Sat optional 30 min walk',steps:'7,000 → 8,000 / day',
+  notes:['Pick weights you could lift about 3 more times with perfect form.','Watch the How to video before each new exercise; mirror-check one set.','Log every weight: it becomes your baseline for “Last time”.'],
+  days:{1:[['Machine chest press',3,'10-12','90s'],['Incline DB press',3,'10-12','90s'],['Pec deck',2,'12-15','60s'],['Triceps rope pushdown',3,'10-12','60s'],['Seated DB overhead extension',2,'10-12','60s']],
+   2:[['Lat pulldown',3,'10-12','90s'],['Seated cable row',3,'10-12','90s'],['Chest-supported row',2,'10-12','90s'],['Face pulls',2,'12-15','60s'],['DB curls',3,'10-12','60s'],['Hammer curls',2,'10-12','60s']],
+   3:[['Goblet squat',3,'10-12','90s'],['Leg press',3,'10-12','90s'],['Leg extension',2,'12-15','60s'],['Seated leg curl',2,'10-12','60s'],['Standing calf raise',3,'12-15','60s']],
+   4:[['Machine shoulder press',3,'10-12','90s'],['Lateral raises',3,'12-15','60s'],['Reverse pec deck',2,'12-15','60s'],['DB shrug',2,'12-15','60s'],['Plank',3,'20-40s','45s'],['Dead bug',2,'8/side','45s']],
+   5:[['DB Romanian deadlift',3,'10-12','90s'],['Glute bridge',3,'12-15','60s'],['Lying leg curl',2,'10-12','60s'],['DB split squat',2,'10/leg','60s'],['Cable curl',2,'12-15','60s'],['Straight-bar pushdown',2,'12-15','60s']]}},
+ {id:'H1',name:'Hypertrophy 1',from:5,to:10,focus:'Build muscle while in a deficit: moderate reps and steady progressive overload on the basics.',sets:'Main lifts 4 × 8–10 · accessories 3 × 10–15',rest:'2–3 min main · 60–90 s accessories',rir:[2,2,2,1,1,1],walk:'20–25 min incline walk after lifting',cardio:'Incline walk 20–25 min after lifting · Sat 30–45 min walk',steps:'8,000–9,000 / day',
+  notes:['Double progression: when every set hits the top of the range, add 5 lb (upper) or 5–10 lb (lower).','Weeks 8–10: if you are recovering well, add 1 set to the first exercise of each day.'],
+  days:{1:[['Bench press',4,'8-10','2-3m'],['Incline DB press',3,'8-12','90-120s'],['Cable fly',3,'12-15','60-90s'],['Triceps rope pushdown',3,'10-12','60-90s'],['Overhead cable triceps extension',3,'10-12','60-90s']],
+   2:[['Lat pulldown',4,'8-12','2m'],['Chest-supported row',3,'8-12','90-120s'],['Seated cable row',3,'10-12','90s'],['Face pulls',2,'12-15','60s'],['EZ-bar curl',3,'8-12','60-90s'],['Hammer curls',3,'10-12','60s']],
+   3:[['Back squat',4,'8-10','2-3m'],['Leg press',3,'10-12','2m'],['Walking lunges',2,'10/leg','90s'],['Leg extension',3,'12-15','60-90s'],['Standing calf raise',4,'10-15','60s']],
+   4:[['Overhead DB press',4,'8-10','2m'],['Lateral raises',4,'12-15','60s'],['Reverse pec deck',3,'12-15','60s'],['DB shrug',3,'10-12','60s'],['Hanging knee raise',3,'10-12','60s'],['Cable crunch',3,'12-15','60s']],
+   5:[['Romanian deadlift',4,'8-10','2-3m'],['Hip thrust',3,'8-12','2m'],['Lying leg curl',3,'10-12','60-90s'],['Bulgarian split squat',2,'8-10/leg','90s'],['DB curls',2,'10-12','60s','A'],['Straight-bar pushdown',2,'10-12','60s','A'],['Seated calf raise',3,'12-15','60s']]}},
+ {id:'D1',deload:true,of:'H1',from:11,to:11},
+ {id:'SH',name:'Strength-Hypertrophy',from:12,to:17,focus:'Get stronger on the big lifts: strength is what protects muscle during a long cut.',sets:'Main lifts 4 × 5–8 · accessories 3 × 8–12',rest:'2–3 min main (3 min squat/deadlift) · 90 s accessories',rir:[3,2,2,2,1,1],walk:'20 min incline walk after lifting',cardio:'Incline walk 20 min after lifting (keep legs fresh) · Sat 30–45 min walk',steps:'9,000 / day',
+  notes:['Warm up: empty bar × 10, then 3–4 ramp-up sets before the first work set.','Add 5 lb when all sets reach the top of the range. Never grind: stop at RIR 1.','Always use safeties or a spotter on bench press and squats.'],
+  days:{1:[['Bench press',4,'5-8','2-3m'],['Incline barbell press',3,'6-10','2-3m'],['Close-grip bench press',3,'6-10','2m'],['Cable fly',2,'12-15','60s'],['Triceps rope pushdown',2,'10-12','60s']],
+   2:[['Barbell row',4,'5-8','2-3m'],['Pull-ups or assisted',4,'5-8','2-3m'],['One-arm DB row',3,'8-10','90s'],['Face pulls',2,'12-15','60s'],['EZ-bar curl',3,'6-10','90s'],['Hammer curls',2,'10-12','60s']],
+   3:[['Back squat',4,'5-8','3m'],['Hack squat',3,'8-10','2m'],['Leg extension',3,'10-12','60-90s'],['Seated leg curl',3,'10-12','60-90s'],['Standing calf raise',4,'8-12','60-90s']],
+   4:[['Barbell overhead press',4,'5-8','2-3m'],['Lateral raises',4,'10-15','60s'],['Reverse pec deck',3,'12-15','60s'],['Barbell shrug',3,'8-10','90s'],['Hanging knee raise',3,'10-15','60s'],['Pallof press',3,'10/side','45s']],
+   5:[['Trap-bar deadlift',4,'5-6','3m'],['Hip thrust',3,'6-10','2m'],['Lying leg curl',3,'8-12','90s'],['Walking lunges',2,'10/leg','90s'],['Cable curl',2,'10-12','60s','A'],['Overhead cable triceps extension',2,'10-12','60s','A']]}},
+ {id:'D2',deload:true,of:'SH',from:18,to:18},
+ {id:'H2',name:'Hypertrophy 2',from:19,to:24,focus:'New exercise variations for a fresh stimulus; slightly higher reps.',sets:'Main lifts 4 × 8–12 · accessories 3 × 12–20',rest:'2 min main · 60 s accessories',rir:[2,2,2,1,1,1],walk:'25 min incline walk after lifting',cardio:'Incline walk 25 min after lifting · Sat 45 min walk',steps:'9,000–10,000 / day',
+  notes:['New lifts: start conservative in week 19 and set new baselines.','Weeks 22–24: the last set of isolation exercises can go to RIR 0 (technical failure).'],
+  days:{1:[['DB bench press',4,'8-12','2m'],['Incline machine press',3,'10-12','90s'],['Low-to-high cable fly',3,'12-15','60s'],['EZ-bar skull crusher',3,'10-12','90s'],['Straight-bar pushdown',3,'12-15','60s']],
+   2:[['Close-grip lat pulldown',4,'10-12','2m'],['T-bar row',3,'8-12','2m'],['Machine row',3,'10-12','90s'],['Straight-arm pulldown',3,'12-15','60s'],['Incline DB curl',3,'10-12','60s'],['Cable rope hammer curl',3,'12-15','60s']],
+   3:[['Hack squat',4,'8-12','2-3m'],['Leg press',3,'12-15','2m'],['DB split squat',3,'10/leg','90s'],['Leg extension',3,'15-20','60s'],['Leg press calf raise',4,'12-15','60s']],
+   4:[['Machine shoulder press',4,'8-12','2m'],['Cable lateral raise',4,'12-15','60s'],['Rear delt DB fly',3,'12-15','60s'],['DB shrug',3,'12-15','60s'],['Cable crunch',3,'12-15','60s'],['Reverse crunch',3,'12-15','45s']],
+   5:[['DB Romanian deadlift',4,'10-12','2m'],['Smith machine hip thrust',3,'10-12','2m'],['Seated leg curl',3,'12-15','60-90s'],['45° back extension',3,'12-15','60s'],['Hip abduction machine',2,'15-20','60s'],['Preacher curl',2,'10-12','60s','A'],['Seated DB overhead extension',2,'10-12','60s','A']]}},
+ {id:'D3',deload:true,of:'H2',from:25,to:25},
+ {id:'C',name:'Cut / Metabolic',friday:'Glutes & Hamstrings + Conditioning',from:26,to:31,focus:'Burn more in less time: supersets, short rests and a conditioning finisher every session.',sets:'Supersets 3 × 10–15 · Fri full-body conditioning',rest:'45–60 s after each superset round',rir:[2,2,2,2,1,1],walk:'25–30 min incline walk after lifting',cardio:'Finisher every session + 25–30 min incline walk · Sat 45–60 min walk',steps:'10,000+ / day',
+  notes:['A1/A2 = one set of each back-to-back, then rest. Three or more letters = circuit.','Keep the first compound heavy-ish so you hold on to strength.','If you feel dizzy or light-headed, stop, sit, sip water and rest; mention it to your doctor.'],
+  days:{1:[['DB bench press',3,'10-12','60s','A'],['Cable fly',3,'12-15','60s','A'],['Incline DB press',3,'10-12','60s','B'],['Triceps rope pushdown',3,'12-15','60s','B'],['Overhead cable triceps extension',3,'12-15','45s','C'],['Push-ups',3,'AMRAP','45s','C'],['Intervals: bike or rower',1,'8 min · 20s hard / 40s easy','','F']],
+   2:[['Lat pulldown',3,'10-12','60s','A'],['Seated cable row',3,'10-12','60s','A'],['One-arm DB row',3,'10-12/arm','60s','B'],['Face pulls',3,'15','60s','B'],['DB curls',3,'12','45s','C'],['Hammer curls',3,'12','45s','C'],['Battle ropes',6,'20s on / 40s off','','F']],
+   3:[['Goblet squat',3,'12-15','60s','A'],['Walking lunges',3,'10/leg','60s','A'],['Leg press',3,'12-15','60s','B'],['Leg extension',3,'15','60s','B'],['Seated leg curl',3,'12-15','45s','C'],['Standing calf raise',3,'15','45s','C'],['Sled push',6,'20 m · walk back to rest','','F']],
+   4:[['Overhead DB press',3,'10-12','60s','A'],['Lateral raises',3,'15','60s','A'],['Reverse pec deck',3,'15','60s','B'],['DB shrug',3,'15','60s','B'],['Hanging knee raise',3,'12','45s','C'],['Plank',3,'40s','45s','C'],['Stair climber',1,'8 min · 1 min fast / 1 min easy','','F']],
+   5:[['Trap-bar deadlift',3,'8','2m'],['Hip thrust',3,'10-12','60s','A'],['Kettlebell swing',3,'15','60s','A'],['Stability ball leg curl',3,'12','45s','B'],['Step-ups',3,'10/leg','45s','B'],["Farmer's carry",3,'40 m','60s','C'],['Push-ups',3,'10-15','60s','C'],['Intervals: bike or rower',1,'10 min · 30s hard / 60s easy','','F']]}},
+ {id:'D4',deload:true,of:'C',from:32,to:32},
+ {id:'S2',name:'Strength 2',from:33,to:38,focus:'Heavier compounds with new variations (conventional deadlift, barbell curl, Arnold press).',sets:'Main lifts 4 × 4–6 · accessories 3 × 6–12',rest:'3 min main · 90 s–2 min accessories',rir:[3,2,2,1,1,1],walk:'20–25 min incline walk after lifting',cardio:'Incline walk 20–25 min after lifting · Sat 30–45 min walk or easy bike',steps:'9,000–10,000 / day',
+  notes:['Goal: beat your Strength-Hypertrophy numbers (check “Last” on each lift).','Conventional deadlift: learn it light; the trap-bar deadlift stays a fine swap.'],
+  days:{1:[['Bench press',4,'4-6','3m'],['Incline DB press',3,'6-8','2m'],['Close-grip bench press',3,'6-8','2m'],['Assisted dips',3,'8-10','90s'],['Triceps rope pushdown',2,'10-12','60s']],
+   2:[['Pull-ups or assisted',4,'4-6','2-3m'],['Barbell row',4,'5-7','2-3m'],['Chest-supported row',3,'8-10','90s'],['Face pulls',2,'15','60s'],['Barbell curl',3,'6-8','90s'],['Hammer curls',2,'10','60s']],
+   3:[['Back squat',4,'4-6','3m'],['Leg press',3,'8-10','2m'],['Bulgarian split squat',3,'6-8/leg','2m'],['Leg extension',2,'12','60s'],['Standing calf raise',4,'8-10','90s']],
+   4:[['Barbell overhead press',4,'4-6','3m'],['Arnold press',3,'8-10','90s'],['Lateral raises',3,'12-15','60s'],['Barbell shrug',3,'6-8','2m'],['Ab wheel rollout',3,'6-10','60s'],['Hanging knee raise',3,'12','60s']],
+   5:[['Conventional deadlift',4,'3-5','3m'],['Hip thrust',4,'6-8','2m'],['Lying leg curl',3,'6-10','90s'],['EZ-bar curl',2,'8-10','60s','A'],['EZ-bar skull crusher',2,'8-10','60s','A'],['Seated calf raise',3,'12-15','60s']]}},
+ {id:'D5',deload:true,of:'S2',from:39,to:39},
+ {id:'H3',name:'Hypertrophy 3',from:40,to:45,focus:'Volume plus intensity techniques (drop sets) to squeeze out more muscle before the final cut.',sets:'Main lifts 4 × 8–12 · accessories 3 × 12–20 (drop set on last set)',rest:'2 min main · 60 s accessories',rir:[2,2,1,1,1,0],walk:'25–30 min incline walk after lifting',cardio:'Incline walk 25–30 min after lifting · Sat 45 min walk',steps:'10,000 / day',
+  notes:['Drop set: on the last set of an isolation exercise, drop the weight ~25% and keep going to RIR 0–1.','Machines and cables are ideal for drop sets (just move the pin).'],
+  days:{1:[['Incline barbell press',4,'8-10','2m'],['Machine chest press',3,'10-12','90s'],['DB fly',3,'12-15','60s'],['Overhead cable triceps extension',3,'12-15','60s'],['Triceps rope pushdown',3,'12-15','60s']],
+   2:[['Lat pulldown',4,'10-12','2m'],['Machine row',3,'10-12','90s'],['One-arm DB row',3,'10-12/arm','90s'],['Straight-arm pulldown',3,'12-15','60s'],['Cable curl',3,'12-15','60s'],['Hammer curls',3,'12','60s']],
+   3:[['Smith machine squat',4,'8-12','2m'],['Leg press',3,'12-15','2m'],['Reverse lunge',3,'10/leg','90s'],['Leg extension',3,'15','60s'],['Seated calf raise',4,'15-20','60s']],
+   4:[['Arnold press',4,'10-12','90s'],['Cable lateral raise',4,'15','60s'],['Face pulls',3,'15','60s'],['DB shrug',3,'15','60s'],['Cable crunch',3,'15','60s'],['Side plank',3,'30s/side','45s']],
+   5:[['Romanian deadlift',4,'8-10','2m'],['Smith machine hip thrust',3,'10-12','2m'],['Seated leg curl',3,'12-15','60s'],['Cable pull-through',3,'12-15','60s'],['Preacher curl',3,'10-12','60s','A'],['Straight-bar pushdown',3,'12-15','60s','A']]}},
+ {id:'D6',deload:true,of:'H3',from:46,to:46},
+ {id:'P',name:'Peak Cut (“Super Cut”)',friday:'Glutes & Hamstrings + Conditioning',from:47,to:52,focus:'Get lean: keep strength with one heavy lift per day, then dense supersets/circuits and finishers.',sets:'Heavy lift 3 × 5 · supersets/circuits 3 × 12–20',rest:'2–3 min heavy lift · 30–45 s circuits',rir:[2,2,2,2,1,1],walk:'30–40 min incline walk after lifting',cardio:'Finisher every session + 30–40 min incline walk · Sat 60 min walk',steps:'12,000 / day',
+  notes:['Density: same work with less rest; try to beat last week’s total session time.','If strength drops 2 sessions in a row, add 1 min rest and check protein, sleep and fluids.','Week 52: take progress photos and celebrate, then restart the program or plan maintenance.'],
+  days:{1:[['Bench press',3,'5','2-3m'],['Incline DB press',3,'10-12','45s','A'],['Push-ups',3,'AMRAP','45s','A'],['Cable fly',3,'15','45s','B'],['Triceps rope pushdown',3,'15','45s','B'],['Battle ropes',8,'20s on / 40s off','','F']],
+   2:[['Pull-ups or assisted',3,'5-8','2m'],['Seated cable row',3,'12','45s','A'],['Face pulls',3,'15','45s','A'],['EZ-bar curl',3,'12','45s','B'],['Hammer curls',3,'12','45s','B'],['Intervals: bike or rower',1,'10 min · 20s hard / 40s easy','','F']],
+   3:[['Back squat',3,'5','2-3m'],['Leg press',3,'15','45s','A'],['Walking lunges',3,'12/leg','45s','A'],['Leg extension',3,'15','45s','B'],['Seated leg curl',3,'15','45s','B'],['Standing calf raise',3,'15-20','30s'],['Sled push',8,'20 m','','F']],
+   4:[['Overhead DB press',3,'6-8','2m'],['Lateral raises',3,'15-20','45s','A'],['Reverse pec deck',3,'15-20','45s','A'],['DB shrug',3,'15','45s','B'],['Hanging knee raise',3,'12-15','45s','B'],['Plank',3,'45s','30s'],["Farmer's carry",4,'40 m','60s','F']],
+   5:[['Trap-bar deadlift',3,'5','2-3m'],['Hip thrust',3,'12','45s','A'],['Kettlebell swing',3,'15-20','45s','A'],['Goblet squat',3,'12','45s','B'],['One-arm DB row',3,'12/arm','45s','B'],['Push-ups',3,'12','45s','B'],['Intervals: bike or rower',1,'12 min · 30s hard / 60s easy','','F']]}}
+];
+// fill deload phases from the block they follow
+PHASES.forEach(p=>{ if(!p.deload) return; const src=PHASES.find(q=>q.id===p.of);
+  Object.assign(p,{name:'Deload',after:src.name,focus:`Recovery week after ${src.name}: same exercises, ~50–60% of the volume.`,sets:'About half the sets, same reps',rest:'As usual',rir:[4],
+    walk:'20–30 min easy walk',cardio:'Easy walking only · no intervals or finishers',steps:'Keep 8,000+ / day',notes:DELOAD_RULES,friday:null,
+    days:Object.fromEntries(Object.entries(src.days).map(([d,ex])=>[d,ex.filter(e=>e[4]!=='F').map(e=>[e[0],Math.max(1,Math.round(e[1]*0.55)),e[2],e[3],''])]))}); });
+
+// Similar exercises (same main muscles, mixed equipment). Every name here has a HOWTO entry.
+const ALTS = {
+ 'Bench press':['DB bench press','Machine chest press','Smith machine bench press','Push-ups'],
+ 'DB bench press':['Bench press','Machine chest press','Smith machine bench press','Push-ups'],
+ 'Machine chest press':['DB bench press','Bench press','Smith machine bench press','Push-ups'],
+ 'Push-ups':['Machine chest press','DB bench press','Bench press','Close-grip push-up'],
+ 'Incline DB press':['Incline barbell press','Incline machine press','Incline Smith press','Landmine press'],
+ 'Incline barbell press':['Incline DB press','Incline machine press','Incline Smith press','Landmine press'],
+ 'Incline machine press':['Incline DB press','Incline barbell press','Incline Smith press','Landmine press'],
+ 'Pec deck':['Cable fly','DB fly','Low-to-high cable fly'],
+ 'Cable fly':['Pec deck','DB fly','Low-to-high cable fly'],
+ 'Low-to-high cable fly':['Cable fly','Pec deck','DB fly'],
+ 'DB fly':['Cable fly','Pec deck','Low-to-high cable fly'],
+ 'Triceps rope pushdown':['Straight-bar pushdown','Overhead cable triceps extension','Triceps dip machine','Close-grip push-up'],
+ 'Straight-bar pushdown':['Triceps rope pushdown','Overhead cable triceps extension','Triceps dip machine','Bench dips'],
+ 'Seated DB overhead extension':['Overhead cable triceps extension','EZ-bar skull crusher','Triceps rope pushdown','Triceps dip machine'],
+ 'Overhead cable triceps extension':['Seated DB overhead extension','EZ-bar skull crusher','Triceps rope pushdown','Triceps dip machine'],
+ 'EZ-bar skull crusher':['Seated DB overhead extension','Overhead cable triceps extension','Close-grip bench press','Triceps dip machine'],
+ 'Close-grip bench press':['Assisted dips','Close-grip push-up','EZ-bar skull crusher','Triceps dip machine'],
+ 'Assisted dips':['Triceps dip machine','Bench dips','Close-grip bench press','Close-grip push-up'],
+ 'Lat pulldown':['Pull-ups or assisted','Close-grip lat pulldown','Single-arm lat pulldown','Straight-arm pulldown'],
+ 'Pull-ups or assisted':['Lat pulldown','Close-grip lat pulldown','Single-arm lat pulldown','Inverted row'],
+ 'Close-grip lat pulldown':['Lat pulldown','Pull-ups or assisted','Single-arm lat pulldown','Straight-arm pulldown'],
+ 'Straight-arm pulldown':['DB pullover','Single-arm lat pulldown','Lat pulldown'],
+ 'Seated cable row':['Machine row','Chest-supported row','One-arm DB row','T-bar row'],
+ 'Chest-supported row':['Machine row','Seated cable row','One-arm DB row','T-bar row'],
+ 'Barbell row':['T-bar row','One-arm DB row','Chest-supported row','Machine row'],
+ 'One-arm DB row':['Seated cable row','Chest-supported row','Machine row','Barbell row'],
+ 'T-bar row':['Barbell row','Chest-supported row','Machine row','Seated cable row'],
+ 'Machine row':['Seated cable row','Chest-supported row','One-arm DB row','Inverted row'],
+ 'Face pulls':['Reverse pec deck','Rear delt DB fly','Cable rear delt fly','Band pull-apart'],
+ 'Reverse pec deck':['Face pulls','Rear delt DB fly','Cable rear delt fly','Band pull-apart'],
+ 'Rear delt DB fly':['Reverse pec deck','Face pulls','Cable rear delt fly','Band pull-apart'],
+ 'DB shrug':['Barbell shrug','Smith machine shrug','Cable shrug',"Farmer's carry"],
+ 'Barbell shrug':['DB shrug','Smith machine shrug','Cable shrug',"Farmer's carry"],
+ 'DB curls':['EZ-bar curl','Cable curl','Preacher curl','Incline DB curl'],
+ 'EZ-bar curl':['Barbell curl','DB curls','Cable curl','Preacher curl'],
+ 'Barbell curl':['EZ-bar curl','DB curls','Cable curl','Preacher curl'],
+ 'Cable curl':['DB curls','EZ-bar curl','Preacher curl','Concentration curl'],
+ 'Incline DB curl':['DB curls','Cable curl','Preacher curl','Concentration curl'],
+ 'Preacher curl':['DB curls','EZ-bar curl','Cable curl','Concentration curl'],
+ 'Hammer curls':['Cable rope hammer curl','Reverse curl','DB curls','Concentration curl'],
+ 'Cable rope hammer curl':['Hammer curls','Reverse curl','Cable curl'],
+ 'Back squat':['Smith machine squat','Hack squat','Leg press','Goblet squat'],
+ 'Goblet squat':['Leg press','Smith machine squat','DB split squat','Back squat'],
+ 'Leg press':['Hack squat','Goblet squat','Smith machine squat','DB split squat'],
+ 'Hack squat':['Leg press','Smith machine squat','Back squat','Goblet squat'],
+ 'Smith machine squat':['Hack squat','Leg press','Back squat','Goblet squat'],
+ 'Leg extension':['Sissy squat','Goblet squat','Reverse lunge','Step-ups'],
+ 'Walking lunges':['Reverse lunge','DB split squat','Step-ups','Bulgarian split squat'],
+ 'DB split squat':['Bulgarian split squat','Reverse lunge','Walking lunges','Step-ups'],
+ 'Reverse lunge':['Walking lunges','DB split squat','Step-ups','Bulgarian split squat'],
+ 'Bulgarian split squat':['DB split squat','Reverse lunge','Step-ups','Walking lunges'],
+ 'Step-ups':['Reverse lunge','DB split squat','Walking lunges','Bulgarian split squat'],
+ 'Seated leg curl':['Lying leg curl','Stability ball leg curl','Nordic hamstring curl'],
+ 'Lying leg curl':['Seated leg curl','Stability ball leg curl','Nordic hamstring curl'],
+ 'Stability ball leg curl':['Seated leg curl','Lying leg curl','Nordic hamstring curl'],
+ 'Romanian deadlift':['DB Romanian deadlift','45° back extension','Cable pull-through','Single-leg RDL','Good morning'],
+ 'DB Romanian deadlift':['Romanian deadlift','45° back extension','Cable pull-through','Single-leg RDL'],
+ '45° back extension':['Romanian deadlift','Cable pull-through','Good morning','DB Romanian deadlift'],
+ 'Cable pull-through':['45° back extension','Kettlebell swing','DB Romanian deadlift','Glute bridge'],
+ 'Trap-bar deadlift':['Conventional deadlift','Sumo deadlift','Romanian deadlift','DB Romanian deadlift'],
+ 'Conventional deadlift':['Trap-bar deadlift','Sumo deadlift','Romanian deadlift'],
+ 'Hip thrust':['Smith machine hip thrust','Glute bridge','Single-leg hip thrust','Cable pull-through'],
+ 'Smith machine hip thrust':['Hip thrust','Glute bridge','Single-leg hip thrust'],
+ 'Glute bridge':['Hip thrust','Smith machine hip thrust','Single-leg hip thrust'],
+ 'Hip abduction machine':['Cable hip abduction','Banded lateral walk','Side-lying hip abduction'],
+ 'Kettlebell swing':['Cable pull-through','DB Romanian deadlift','Hip thrust','Battle ropes'],
+ 'Standing calf raise':['Leg press calf raise','Smith machine calf raise','Single-leg calf raise','Seated calf raise'],
+ 'Seated calf raise':['Standing calf raise','Leg press calf raise','Single-leg calf raise'],
+ 'Leg press calf raise':['Standing calf raise','Smith machine calf raise','Seated calf raise'],
+ 'Overhead DB press':['Machine shoulder press','Barbell overhead press','Arnold press','Landmine press'],
+ 'Machine shoulder press':['Overhead DB press','Smith machine shoulder press','Arnold press','Landmine press'],
+ 'Barbell overhead press':['Overhead DB press','Machine shoulder press','Smith machine shoulder press','Landmine press'],
+ 'Arnold press':['Overhead DB press','Machine shoulder press','Landmine press'],
+ 'Lateral raises':['Cable lateral raise','Machine lateral raise','Lean-away lateral raise'],
+ 'Cable lateral raise':['Lateral raises','Machine lateral raise','Lean-away lateral raise'],
+ 'Plank':['Dead bug','Side plank','Bird dog','Ab wheel rollout'],
+ 'Dead bug':['Plank','Bird dog','Pallof press'],
+ 'Side plank':['Pallof press','Suitcase carry','Plank'],
+ 'Pallof press':['Side plank','Suitcase carry','Dead bug','Cable woodchop'],
+ 'Hanging knee raise':["Captain's chair knee raise",'Reverse crunch','Lying leg raise','Dead bug'],
+ 'Reverse crunch':['Hanging knee raise','Lying leg raise',"Captain's chair knee raise",'Dead bug'],
+ 'Cable crunch':['Ab crunch machine','Stability ball crunch','Reverse crunch'],
+ 'Ab wheel rollout':['Plank','Dead bug','Stability ball crunch'],
+ 'Intervals: bike or rower':['Stationary bike','Elliptical','Stair climber','Jump rope'],
+ 'Battle ropes':['Jump rope','Kettlebell swing','Intervals: bike or rower','Sled push'],
+ 'Sled push':['Stair climber','Intervals: bike or rower','Battle ropes',"Farmer's carry"],
+ 'Stair climber':['Incline walk','Elliptical','Intervals: bike or rower','Stationary bike'],
+ "Farmer's carry":['Suitcase carry','DB shrug','Sled push'],
+ 'Incline walk':['Stair climber','Elliptical','Stationary bike']
+};
+// Old exercise names (from the original single-week plan) → current name, so history & "Last time" carry over.
+const ALIAS = {'Leg curl':'Seated leg curl','DB bench':'DB bench press','Incline bench or machine press':'Incline barbell press','Trap-bar or conventional deadlift':'Trap-bar deadlift','Cable row':'Seated cable row'};
+const NO_WEIGHT = new Set(['Plank','Side plank','Dead bug','Bird dog','Push-ups','Close-grip push-up','Bench dips','Inverted row','Hanging knee raise',"Captain's chair knee raise",'Lying leg raise','Reverse crunch','Band pull-apart','Banded lateral walk','Side-lying hip abduction','Stability ball leg curl','Stability ball crunch','Ab wheel rollout','Nordic hamstring curl','Sissy squat','Glute bridge','Single-leg hip thrust','Jump rope','Battle ropes','Stair climber','Elliptical','Stationary bike','Intervals: bike or rower','Incline walk']);
+const CARDIO = new Set(['Intervals: bike or rower','Incline walk','Stair climber','Elliptical','Stationary bike','Jump rope','Battle ropes','Sled push']);
+const howtoOf = n => HOWTO[n] || HOWTO[ALIAS[n]];
+const namesFor = n => [n, ...Object.keys(ALIAS).filter(k=>ALIAS[k]===n)];
+
+/* ----- week math ----- */
+const progStart = () => mondayOf(S.program.start);
+const progWeekRaw = (k=today()) => Math.floor(diffDays(progStart(), k)/7)+1;
+const clampWeek = w => Math.min(PROGRAM_WEEKS, Math.max(1, w));
+const phaseOf = w => PHASES.find(p=>w>=p.from && w<=p.to);
+const weekInPhase = w => w - phaseOf(w).from + 1;
+const rirFor = w => { const p=phaseOf(w); return p.rir[Math.min(p.rir.length-1, weekInPhase(w)-1)]; };
+const dateFor = (w,dow) => addDays(progStart(), (w-1)*7 + (dow===0?6:dow-1));
+function dayTitle(w,dow){ const p=phaseOf(w); return dow===5 && p.friday ? p.friday : DAY_TITLES[dow]; }
+function planFor(w,dow){ // [{name,sets,reps,rest,g,label}] for program week w, weekday dow
+  const p=phaseOf(w); let ex=(p.days[dow]||[]).map(e=>({name:e[0],sets:e[1],reps:e[2],rest:e[3]||'',g:e[4]||''}));
+  if(dow>=1&&dow<=5) ex.push({name:WALK,sets:1,reps:p.walk,rest:'',g:''});
+  else if(dow===6) ex=[{name:WALK,sets:1,reps:p.deload?'20–30 min easy (optional)':'30–60 min easy walk or easy bike (optional)',rest:'',g:''}];
+  else ex=[{name:WALK,sets:1,reps:'Optional easy 20–30 min walk · rest day',rest:'',g:''}];
+  const cnt={}; ex.forEach(e=>{ if(e.g&&e.g!=='F') cnt[e.g]=(cnt[e.g]||0)+1; }); const idx={};
+  ex.forEach(e=>{ if(e.g==='F') e.label='Finisher'; else if(e.g){ idx[e.g]=(idx[e.g]||0)+1; e.label=(cnt[e.g]>2?'Circuit ':'')+e.g+idx[e.g]; } });
+  return ex;
+}
+function swapFor(date, orig){ const d=S.swaps.day[date]; if(d && d[orig]) return {name:d[orig], kind:'day'}; if(S.swaps.always[orig]) return {name:S.swaps.always[orig], kind:'always'}; return {name:orig, kind:null}; }
+function restTxt(r){ return r ? r.replace(/(\d)-(\d)/,'$1–$2').replace(/(\d)m$/,'$1 min').replace(/(\d)s$/,'$1 s') : ''; }
+function exScheme(e){ return (e.sets>1?`${e.sets} × ${e.reps}`:e.reps).replace(/(\d)-(\d)/g,'$1–$2') + (e.rest?` · rest ${restTxt(e.rest)}`:''); }
 /* ================= Utils ================= */
 const $ = s => document.querySelector(s);
 const pad = n => String(n).padStart(2,'0');
@@ -466,20 +637,30 @@ const mondayOf = k => { const d = parseKey(k); const w = (d.getDay()+6)%7; d.set
 
 let S;
 function load(){
-  try{ S = normalize(JSON.parse(localStorage.getItem(STORE_KEY) || 'null')); }
-  catch(e){ console.warn('Load failed, starting fresh', e); S = DEFAULTS(); }
+  let raw=null;
+  try{ raw = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); S = normalize(raw); }
+  catch(e){ console.warn('Load failed, starting fresh', e); S = DEFAULTS(); return; }
+  // one-time migration v1 → v2: pin the program start date (first use) so the week number never drifts
+  if(!raw || !raw.program || raw.program.start!==S.program.start) save();
 }
 function normalize(raw){
   const d = DEFAULTS();
   if(!raw || typeof raw !== 'object') return d;
+  const obj = o => o && typeof o==='object' && !Array.isArray(o) ? o : {};
+  const days = raw.days && typeof raw.days==='object' ? raw.days : {};
+  const isKey = k => typeof k==='string' && /^\d{4}-\d{2}-\d{2}$/.test(k);
+  // program start: keep saved value; otherwise first use = earliest logged day (logs are always saved to "today")
+  const firstUse = Object.keys(days).filter(isKey).sort()[0] || d.program.start;
   return {
-    v:1,
+    v:2,
     profile:{...d.profile,...(raw.profile||{})},
     targets:{...d.targets,...(raw.targets||{})},
-    days: raw.days && typeof raw.days==='object' ? raw.days : {},
+    days,
     weights: Array.isArray(raw.weights) ? raw.weights : [],
     zep: Array.isArray(raw.zep) ? raw.zep : [],
-    checkins: Array.isArray(raw.checkins) ? raw.checkins : []
+    checkins: Array.isArray(raw.checkins) ? raw.checkins : [],
+    program: {start: isKey(raw.program?.start) ? raw.program.start : firstUse},
+    swaps: {always: obj(raw.swaps?.always), day: obj(raw.swaps?.day)}
   };
 }
 function save(){
@@ -520,13 +701,14 @@ function workoutsDoneBetween(a,b){
   let n=0;
   for(const [k,d] of Object.entries(S.days)){
     if(k<a||k>b||!d.ex) continue;
-    if(Object.entries(d.ex).some(([name,e])=>name!==WALK && e && e.sets && e.sets.some(Boolean))) n++;
+    if(Object.entries(d.ex).some(([name,e])=>!CARDIO.has(name) && e && e.sets && e.sets.some(Boolean))) n++;
   }
   return n;
 }
 function lastWeightFor(name, beforeKey){
   const keys = Object.keys(S.days).filter(k=>k<beforeKey).sort().reverse();
-  for(const k of keys){ const e=S.days[k].ex?.[name]; if(e && e.w) return {w:e.w,k}; }
+  const names = namesFor(name); // includes old names that were renamed (see ALIAS)
+  for(const k of keys){ for(const n of names){ const e=S.days[k].ex?.[n]; if(e && e.w) return {w:e.w,k}; } }
   return null;
 }
 function zepInfo(){
@@ -595,6 +777,7 @@ function renderToday(){
         <div class="sub num" style="margin-top:8px">${lost>0?`−${lost} lb down`:'Day one energy'}<br>${togo>0?`${togo} lb to go`:'Goal reached! 🏆'}</div></div></div>
       <div class="bar"><i style="width:${pct}%"></i></div>
       <div class="row between sub num" style="margin-top:6px;font-size:12px"><span>${P.start} start</span><span>${Math.round(pct)}%</span><span>${P.goal} super cut</span></div>
+      ${(()=>{ const w=clampWeek(progWeekRaw(k)); return `<button class="prog-chip" data-action="goto-workout"><span class="num"><b>Week ${w} of ${PROGRAM_WEEKS} · ${esc(phaseOf(w).name)}</b><br><span class="sub">Today: ${esc(dayTitle(w,dowToday))}</span></span><span aria-hidden="true">›</span></button>`; })()}
     </div>
     <div class="section-title">Today's targets</div>
     <div class="rings">${rc('protein')}${rc('calories')}${rc('water')}${rc('steps')}</div>
@@ -602,58 +785,108 @@ function renderToday(){
     <div class="section-title">Workout</div>
     <div class="card" id="workoutCard">${workoutCardHTML(k,selDow,dowToday)}</div>`;
 }
-function scheme(e){ return e[1]>1 ? `${e[1]} × ${e[2]}` : e[2]; }
 function isDone(st){ return !!(st && st.sets && st.sets.length && st.sets.every(Boolean)); }
+function progHeaderHTML(w,raw){
+  const p=phaseOf(w), len=p.to-p.from+1;
+  let extra='';
+  if(raw>PROGRAM_WEEKS) extra=`<div class="banner" style="margin:12px 0 0"><span class="emoji">🏁</span><div class="grow"><b>52-week program complete!</b><div class="sub">You're in week ${raw}. Showing week 52 until you restart.</div></div><button class="btn sm" data-action="restart-program">Restart</button></div>`;
+  else if(raw<1) extra=`<div class="note" style="margin-top:10px">Program starts ${esc(fmtLong(progStart()))}. Showing week 1 as a preview.</div>`;
+  return `<div class="prog-hdr ${p.deload?'deload':''}">
+    <div class="row between" style="align-items:flex-start;gap:10px"><div class="grow">
+      <div class="prog-wk num" id="progLabel">Week ${w} of ${PROGRAM_WEEKS} · ${esc(p.name)}</div>
+      <div class="sub">${p.deload?'Deload week: about half the sets, lighter, RIR 4':`Week ${weekInPhase(w)} of ${len} in this phase · RIR ${rirFor(w)}`}</div></div>
+      <button class="btn ghost sm" data-action="goto-plan" data-w="${w}">Plan ›</button></div>
+    <div class="prog-bar" aria-hidden="true"><i style="width:${w/PROGRAM_WEEKS*100}%"></i></div>${extra}</div>`;
+}
 function workoutCardHTML(k, dow, dowToday){
-  const plan=SPLIT[dow], d=peekDay(k);
+  const raw=progWeekRaw(k), w=clampWeek(raw), p=phaseOf(w), date=dateFor(w,dow), d=peekDay(k);
+  const plan=planFor(w,dow);
   const chips=[1,2,3,4,5,6,0].map(i=>`<button class="chip ${i===dow?'on':''} ${i===dowToday?'today':''}" data-action="seldow" data-dow="${i}">${DAYNAMES[i]}</button>`).join('');
-  const walkScheme = dow===0||dow===6 ? '30-45 min easy walk or 8k+ steps' : '20-30 min after lifting (or 8k+ steps)';
-  const exs = plan.ex.map(e=>exHTML(k,e,d)).join('') + exHTML(k,[WALK,1,walkScheme,true],d);
-  const all=[...plan.ex.map(e=>e[0]),WALK]; const done=all.filter(n=>isDone(d.ex[n])).length;
-  return `<div class="chips" style="margin-bottom:14px">${chips}</div>
-    <div class="row between" style="align-items:flex-start"><div><h2>${DAYFULL[dow]} · ${plan.name}</h2><div class="sub">${plan.sub}${dow!==dowToday?` · <span style="color:var(--warn)">logs save to today</span>`:''}</div></div>
-    <span class="pill ${done===all.length?'good':'accent'} num">${done}/${all.length}</span></div>
-    <div style="margin-top:8px">${exs}</div>
-    ${plan.ex.length
-      ? `<div class="note" style="margin-top:6px"><b>Progression:</b> hit the top of the rep range on all sets with good form → add weight next time (+5 lb upper, +5–10 lb lower). Leave 1–2 reps in reserve. Rest 90–150 s on big lifts.</div>`
-      : `<div class="note" style="margin-top:6px"><b>Rest day.</b> Walk, stretch, hit 8k+ steps and your protein. Recovery is part of the cut.</div>`}`;
+  const rows=plan.map(e=>exHTML(k,e,swapFor(date,e.name),date,d)).join('');
+  const names=plan.map(e=>swapFor(date,e.name).name); const done=names.filter(n=>isDone(d.ex[n])).length;
+  const lifting=dow>=1&&dow<=5;
+  const note = !lifting
+    ? `<div class="note" style="margin-top:6px"><b>${dow===6?'Active recovery.':'Rest day.'}</b> ${dow===6?'Optional easy walk or bike, 10 min mobility.':'Recover, stretch and do your weekly check-in.'} Steps: ${esc(p.steps)}. Hit your protein; recovery is part of the cut.</div>`
+    : p.deload ? `<div class="note" style="margin-top:6px"><b>Deload:</b> ${DELOAD_RULES.slice(0,2).map(esc).join(' ')}</div>`
+    : `<div class="note" style="margin-top:6px"><b>Progression:</b> hit the top of the rep range on all sets with good form → add weight next time (+5 lb upper, +5–10 lb lower). This week stop ${rirFor(w)} rep${rirFor(w)===1?'':'s'} short of failure (RIR ${rirFor(w)}).${plan.some(e=>e.g&&e.g!=='F')?' <b>A1/A2</b> = superset: alternate the two moves, rest after both.':''}</div>`;
+  return `${progHeaderHTML(w,raw)}
+    <div class="chips" style="margin:14px 0">${chips}</div>
+    <div class="row between" style="align-items:flex-start"><div><h2>${DAYFULL[dow]} · ${esc(dayTitle(w,dow))}</h2><div class="sub">${esc(DAY_SUBS[dow])}${dow!==dowToday?` · <span style="color:var(--warn)">logs save to today</span>`:''}</div></div>
+    <span class="pill ${done===names.length?'good':'accent'} num">${done}/${names.length}</span></div>
+    <div style="margin-top:8px">${rows}</div>${note}`;
 }
 function howtoBtn(name){ return `<button class="howto-btn" data-action="howto" data-ex="${esc(name)}" aria-label="How to do ${esc(name)}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z"/></svg>How to</button>`; }
-function exHTML(k,e,d){
-  const [name,sets,,noW]=e; const st=d.ex[name]||{};
+function replaceBtn(orig,date,name){ return ALTS[orig] ? `<button class="howto-btn repl-btn" data-action="replace" data-orig="${esc(orig)}" data-date="${date}" aria-label="Replace ${esc(name)}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5h9l-2.5-2.5M13 11H4l2.5 2.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Replace</button>` : ''; }
+function swapNote(orig,sw,date){ return sw.kind ? `<div class="swapped">↔ Swapped from ${esc(orig)} · ${sw.kind==='always'?'always':'this day'} <button class="linkbtn" data-action="swap-undo" data-orig="${esc(orig)}" data-date="${date}" data-kind="${sw.kind}">Undo</button></div>` : ''; }
+function exHTML(k,e,sw,date,d){
+  const name=sw.name, orig=e.name, sets=e.sets, noW=NO_WEIGHT.has(name); const st=d.ex[name]||{};
   const arr=Array.from({length:sets},(_,i)=>!!(st.sets&&st.sets[i]));
   const done=arr.every(Boolean); const last = noW?null:lastWeightFor(name,k);
-  return `<div class="ex ${done?'done':''}" data-ex="${esc(name)}" data-n="${sets}">
+  return `<div class="ex ${done?'done':''}" data-ex="${esc(name)}" data-orig="${esc(orig)}" data-n="${sets}">
     <button class="check" data-action="toggle-ex" aria-label="Mark ${esc(name)} done"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
-    <div class="grow"><div class="name">${name===WALK?'🚶 ':''}${esc(name)}</div><div class="ex-meta"><div class="scheme num">${esc(scheme(e))}</div>${howtoBtn(name)}</div>
+    <div class="grow"><div class="name">${e.label?`<span class="ss ${e.g==='F'?'fin':''}">${esc(e.label)}</span>`:''}${name===WALK?'🚶 ':''}${esc(name)}</div>
+      <div class="scheme num">${esc(exScheme(e))}</div>${swapNote(orig,sw,date)}
       ${last?`<div class="last num">Last: ${esc(last.w)} lb · ${fmtDate(last.k)}</div>`:''}
       ${sets>1?`<div class="sets">${arr.map((on,i)=>`<button class="set num ${on?'on':''}" data-action="toggle-set" data-i="${i}" aria-label="Set ${i+1}">${on?'✓':i+1}</button>`).join('')}</div>`:''}
     </div>
     ${noW?'':`<div class="wt"><input class="inp num" inputmode="decimal" placeholder="lb" value="${esc(st.w||'')}" data-action="ex-weight" aria-label="Weight used for ${esc(name)}"><small>weight used</small></div>`}
+    <div class="ex-actions row-actions">${howtoBtn(name)}${replaceBtn(orig,date,name)}</div>
   </div>`;
 }
 
 /* ================= Plan ================= */
+const shortPhase = p => p.name.replace('Strength-Hypertrophy','Strength-Hyp.').replace(/\s*\(.*\)$/,'');
+let planWeek = null, planShownWeek = null;
 function renderPlan(){
-  const dowT=parseKey(today()).getDay();
-  const days=[1,2,3,4,5].map(i=>{ const p=SPLIT[i];
-    return `<details class="card plan-day" ${i===dowT?'open':''}><summary><span>${DAYFULL[i]} · ${p.name} <span class="sub" style="font-weight:500">${p.sub}</span></span></summary>
-      <div style="margin-top:8px">${p.ex.map(e=>`<div class="ex"><div class="grow"><div class="name">${esc(e[0])}</div><div class="scheme num">${esc(scheme(e))}</div></div>${howtoBtn(e[0])}</div>`).join('')}
-      <div class="ex"><div class="grow"><div class="name">🚶 ${esc(WALK)}</div><div class="scheme">20–30 min</div></div>${howtoBtn(WALK)}</div></div></details>`;}).join('');
+  const raw=progWeekRaw(), cur=clampWeek(raw); if(planWeek===null) planWeek=cur;
+  const w=clampWeek(planWeek), p=phaseOf(w), dowT=parseKey(today()).getDay();
+  const keepOpen = planShownWeek===w ? new Set([...document.querySelectorAll('#v-plan details.plan-day[open]')].map(d=>+d.dataset.dow)) : null;
+  planShownWeek=w;
+  const tl=PHASES.map(ph=>`<button class="tl-seg ${ph.deload?'dl':''} ${ph===p?'on':''}" style="flex:${ph.to-ph.from+1}" data-action="plan-week" data-w="${ph.from}" aria-label="${esc(ph.name)}, weeks ${ph.from}–${ph.to}"></button>`).join('');
+  const opts=PHASES.map(ph=>`<optgroup label="${esc(ph.name)} (wk ${ph.from}${ph.to>ph.from?'–'+ph.to:''})">${Array.from({length:ph.to-ph.from+1},(_,i)=>ph.from+i).map(n=>`<option value="${n}" ${n===w?'selected':''}>Week ${n} · ${esc(shortPhase(ph))}${n===cur?' ◂':''}</option>`).join('')}</optgroup>`).join('');
+  const rir=rirFor(w);
+  const days=[1,2,3,4,5,6,0].map(dow=>{ const date=dateFor(w,dow), ex=planFor(w,dow);
+    const open = keepOpen ? keepOpen.has(dow) : w===cur ? dow===dowT : dow===1;
+    return `<details class="card plan-day" ${open?'open':''} data-dow="${dow}"><summary><span>${DAYNAMES[dow]} · ${esc(dayTitle(w,dow))} <span class="sub" style="font-weight:500">${esc(fmtDate(date))}${w===cur&&dow===dowT?' · today':''}</span></span></summary>
+      <div style="margin-top:8px">${ex.map(e=>{ const sw=swapFor(date,e.name);
+        return `<div class="ex plan-ex" data-orig="${esc(e.name)}" data-ex="${esc(sw.name)}"><div class="grow"><div class="name">${e.label?`<span class="ss ${e.g==='F'?'fin':''}">${esc(e.label)}</span>`:''}${sw.name===WALK?'🚶 ':''}${esc(sw.name)}</div><div class="scheme num">${esc(exScheme(e))}</div>${swapNote(e.name,sw,date)}
+          <div class="ex-actions">${howtoBtn(sw.name)}${replaceBtn(e.name,date,sw.name)}</div></div></div>`; }).join('')}</div></details>`; }).join('');
   $('#v-plan').innerHTML = `
-    <div class="card hero"><h2>Weekly split</h2><div class="sub">5 gym days: upper/lower + full-body conditioning. Weekends: rest or walk 8k+ steps.</div>
-      <div class="row wrap" style="gap:6px;margin-top:12px">${[1,2,3,4,5,6,0].map(i=>`<span class="pill ${i===dowT?'accent':''}">${DAYNAMES[i]} · ${SPLIT[i].name}</span>`).join('')}</div></div>
+    <div class="card hero"><div class="kicker">52-week program</div><h2 style="margin:2px 0 4px">Body-part split</h2>
+      <div class="sub">Mon Chest + Triceps · Tue Back + Biceps · Wed Legs (quads) + Calves · Thu Shoulders + Abs · Fri Glutes & Hams + Arms/Conditioning · Sat active recovery · Sun rest + check-in</div>
+      <div class="tl" role="group" aria-label="Program phases">${tl}</div>
+      <div class="row between sub num" style="font-size:11px;margin-top:4px"><span>Wk 1</span><span>Deloads = dark</span><span>Wk 52</span></div>
+      <div class="week-nav">
+        <button class="nav-btn" data-action="plan-week" data-w="${w-1}" ${w<=1?'disabled':''} aria-label="Previous week">‹</button>
+        <select class="inp" id="planWeekSel" aria-label="Choose week">${opts}</select>
+        <button class="nav-btn" data-action="plan-week" data-w="${w+1}" ${w>=PROGRAM_WEEKS?'disabled':''} aria-label="Next week">›</button>
+      </div>
+      ${w!==cur?`<button class="btn ghost block sm" style="margin-top:8px" data-action="plan-week" data-w="${cur}">Back to this week (week ${cur})</button>`:''}
+      ${raw>PROGRAM_WEEKS?`<div class="note" style="margin-top:10px">🏁 Program complete (week ${raw}). <button class="linkbtn" data-action="restart-program">Restart at week 1</button></div>`:''}
+    </div>
+    <div class="card phase-card ${p.deload?'deload':''}" id="phaseCard">
+      <div class="row between" style="align-items:flex-start"><div><div class="kicker">Week ${w} of ${PROGRAM_WEEKS}${w===cur?' · this week':''}</div><h2 style="margin:2px 0 0">${esc(p.name)}</h2><div class="sub">Weeks ${p.from}${p.to>p.from?'–'+p.to:''} · starts ${esc(fmtDate(dateFor(w,1)))}</div></div>
+        <span class="pill ${p.deload?'warn':'accent'} num">RIR ${rir}</span></div>
+      <p class="sub" style="margin:10px 0 0;color:var(--text)">${esc(p.focus)}</p>
+      <div class="ph-grid">
+        <div><span>Sets × reps</span><b>${esc(p.sets)}</b></div>
+        <div><span>Rest</span><b>${esc(p.rest)}</b></div>
+        <div><span>Effort</span><b>Stop ${rir} rep${rir===1?'':'s'} short of failure (RIR ${rir})${p.deload?'':` · week ${weekInPhase(w)} of ${p.to-p.from+1}`}</b></div>
+        <div><span>Cardio</span><b>${esc(p.cardio)}</b></div>
+        <div><span>Steps</span><b>${esc(p.steps)}</b></div>
+      </div>
+      <ul class="ph-notes">${(p.deload?DELOAD_RULES:p.notes).map(n=>`<li>${esc(n)}</li>`).join('')}</ul>
+    </div>
     ${days}
-    <details class="card plan-day" ${dowT===0||dowT===6?'open':''}><summary><span>Sat & Sun · Rest / Walk</span></summary><div class="sub" style="margin-top:8px">Easy walk 30–60 min or 8k+ steps, 10 min mobility. Sunday = weekly check-in.</div></details>
     <div class="section-title">Form & progression</div>
     <div class="card"><div class="note" style="border:0;padding:0;background:none"><ul>
       <li><b>Double progression:</b> work within the rep range. When every set hits the top of the range with clean form, add weight next session and restart at the bottom of the range.</li>
-      <li><b>1–2 reps in reserve (RIR):</b> end each set feeling you could do 1–2 more good reps. No grinding to failure on squats/deadlifts.</li>
+      <li><b>Reps in reserve (RIR):</b> RIR 2 = you could have done 2 more good reps. The number for each week is shown above. No grinding to failure on squats/deadlifts.</li>
+      <li><b>Supersets (A1/A2):</b> do one set of each back to back, then rest. <b>Finisher:</b> short conditioning block at the end.</li>
+      <li><b>Deloads</b> (weeks 11, 18, 25, 32, 39, 46): ~50–60% of the sets, lighter, no finishers. Don't skip them.</li>
       <li><b>Warm up:</b> 5 min easy cardio + 2–3 ramp-up sets on the first big lift.</li>
-      <li><b>Form cues:</b> brace before each rep, control the lowering (2–3 s), full range of motion, neutral spine on hinges.</li>
+      <li><b>Replace</b> any exercise if a machine is busy or something hurts. Swap once or choose "always".</li>
       <li><b>In a cut</b> the goal is to <i>keep</i> strength. If lifts drop 2+ sessions in a row, check protein, sleep and hydration.</li>
-      <li><b>Every training day:</b> 20–30 min incline walk after lifting (or 8k+ steps total).</li>
-      <li><b>Log your weights</b> on the Today tab; it shows what you used last time.</li>
     </ul></div></div>`;
 }
 /* ================= Progress ================= */
@@ -837,14 +1070,14 @@ function renderMeals(){
 }
 /* ================= Sheets ================= */
 function openSheet(html){ $('#sheetIn').innerHTML='<div class="grab"></div>'+html; $('#sheet').classList.add('on'); $('#backdrop').classList.add('on'); }
-function closeSheet(){ $('#sheet').classList.remove('on'); $('#backdrop').classList.remove('on'); $('#sheetIn').querySelectorAll('iframe').forEach(f=>f.remove()); }
-function openHowto(name){
-  const h=HOWTO[name]||{}, v=h.v, yt=id=>`https://www.youtube.com/watch?v=${encodeURIComponent(id)}`;
+function closeSheet(){ swapAlwaysPref=null; $('#sheet').classList.remove('on'); $('#backdrop').classList.remove('on'); $('#sheetIn').querySelectorAll('iframe').forEach(f=>f.remove()); }
+function openHowto(name, back){
+  const h=howtoOf(name)||{}, v=h.v, yt=id=>`https://www.youtube.com/watch?v=${encodeURIComponent(id)}`;
   const search=`https://www.youtube.com/results?search_query=${encodeURIComponent(name+' proper form')}`;
-  const e=Object.values(SPLIT).flatMap(p=>p.ex).find(x=>x[0]===name);
   const labels=['Setup','Move','Feel','Avoid'];
-  openSheet(`<div class="row between" style="align-items:flex-start"><div class="grow"><div class="kicker">How to</div><h2 style="margin:2px 0 0">${esc(name)}</h2>${h.m?`<div class="sub">${esc(h.m)}</div>`:''}</div>
-      ${e?`<span class="pill accent num">${esc(scheme(e))}</span>`:''}</div>
+  const backBtn = back ? `<button class="btn ghost sm" style="margin-bottom:10px" data-action="replace" data-orig="${esc(back.orig)}" data-date="${esc(back.date)}">‹ Back to alternatives</button>` : '';
+  openSheet(`${backBtn}<div class="row between" style="align-items:flex-start"><div class="grow"><div class="kicker">How to</div><h2 style="margin:2px 0 0">${esc(name)}</h2>${h.m?`<div class="sub">${esc(h.m)}</div>`:''}</div>
+      ${h.e?`<span class="pill accent">${esc(h.e)}</span>`:''}</div>
     ${v?`<div class="video" id="howtoVid" data-id="${esc(v[0])}" style="background-image:url('https://i.ytimg.com/vi/${esc(v[0])}/hqdefault.jpg')"></div>
       <div class="vid-src">▶ ${esc(v[1])} · <b>${esc(v[2])}</b></div>
       ${location.protocol==='file:'?`<div class="vid-src" style="color:var(--dim)">Video not playing? Opened as a local file, YouTube may block the inline player. Use the button below.</div>`:''}
@@ -853,7 +1086,9 @@ function openHowto(name){
     ${h.alt?`<a class="alt-link" href="${yt(h.alt[0])}" target="_blank" rel="noopener"><span>＋</span><span><b>${esc(h.alt[3])}:</b> ${esc(h.alt[1])} · ${esc(h.alt[2])} ↗</span></a>`:''}
     ${h.c?`<ul class="cues">${h.c.map((c,i)=>`<li class="${i===3?'avoid':''}"><span class="k">${labels[i]||''}</span><span>${esc(c)}</span></li>`).join('')}</ul>`:''}
     ${h.tip?`<div class="note" style="margin-top:12px">🔰 <b>Beginner tip:</b> ${esc(h.tip)}</div>`:''}
-    <button class="btn block" style="margin-top:14px" data-action="close-sheet">Got it</button>`);
+    ${back?`<button class="btn block" style="margin-top:14px" data-action="swap-pick" data-orig="${esc(back.orig)}" data-date="${esc(back.date)}" data-alt="${esc(name)}">Use ${esc(name)}</button>
+      <button class="btn ghost block" style="margin-top:8px" data-action="replace" data-orig="${esc(back.orig)}" data-date="${esc(back.date)}">‹ Back to alternatives</button>`
+     :`<button class="btn block" style="margin-top:14px" data-action="close-sheet">Got it</button>`}`);
   $('#sheet').scrollTop=0;
   // lazy: the player iframe is only created once the sheet is open
   const box=$('#howtoVid');
@@ -862,6 +1097,42 @@ function openHowto(name){
     f.title=`${name} demo video`; f.allow='accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
     f.allowFullscreen=true; f.referrerPolicy='strict-origin-when-cross-origin'; box.appendChild(f); }
 }
+let swapAlwaysPref=null; // remembers the checkbox while hopping between Replace and How to
+function openReplace(orig, date){
+  const cur=swapFor(date,orig), alw=S.swaps.always[orig];
+  const opts=[orig,...(ALTS[orig]||[])].filter((n,i,a)=>n!==cur.name && a.indexOf(n)===i);
+  const chk = swapAlwaysPref ?? (cur.kind==='always');
+  openSheet(`<div class="kicker">Replace exercise</div><h2 style="margin:2px 0 0">${esc(cur.name)}</h2>
+    <div class="sub">${esc(howtoOf(cur.name)?.m||'')} · for ${esc(fmtLong(date))}</div>
+    ${cur.kind?`<div class="swapped" style="margin-top:8px">↔ Swapped from ${esc(orig)} · ${cur.kind==='always'?'always':'this day'}</div>`:''}
+    <div class="alt-list" id="altList">${opts.map(n=>{ const h=howtoOf(n)||{};
+      return `<div class="alt-row" data-alt="${esc(n)}"><button class="alt-pick" data-action="swap-pick" data-orig="${esc(orig)}" data-date="${date}" data-alt="${esc(n)}">
+        <b>${esc(n)}${n===orig?' <span class="pill">original</span>':''}</b><span class="sub">${h.e?`<span class="eq">${esc(h.e)}</span> `:''}${esc(h.m||'')}</span></button>
+        <button class="howto-btn" data-action="howto" data-ex="${esc(n)}" data-back-orig="${esc(orig)}" data-back-date="${date}" aria-label="How to do ${esc(n)}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z"/></svg>How to</button></div>`; }).join('')}</div>
+    <label class="chk"><input type="checkbox" id="swapAlways" ${chk?'checked':''}><span><b>Always use this swap</b><br><span class="sub">Every week, every phase that has ${esc(orig)}</span></span></label>
+    ${cur.kind==='day'?`<button class="btn ghost block" style="margin-top:10px" data-action="swap-undo" data-orig="${esc(orig)}" data-date="${date}" data-kind="day">↩ Undo swap for this day</button>`:''}
+    ${alw?`<button class="btn ghost block" style="margin-top:10px" data-action="swap-undo" data-orig="${esc(orig)}" data-date="${date}" data-kind="always">↩ Remove “always” rule (${esc(orig)} → ${esc(alw)})</button>`:''}
+    <button class="btn ghost block" style="margin-top:10px" data-action="close-sheet">Cancel</button>`);
+  $('#sheet').scrollTop=0;
+}
+function applySwap(orig,date,alt,always){
+  const day=S.swaps.day;
+  if(always){
+    if(alt===orig) delete S.swaps.always[orig]; else S.swaps.always[orig]=alt;
+    if(day[date]){ delete day[date][orig]; if(!Object.keys(day[date]).length) delete day[date]; }
+  } else {
+    const base=S.swaps.always[orig]||orig;
+    if(alt===base){ if(day[date]){ delete day[date][orig]; if(!Object.keys(day[date]).length) delete day[date]; } }
+    else (day[date] ||= {})[orig]=alt;
+  }
+  save();
+}
+function undoSwap(orig,date,kind){
+  if(kind==='always') delete S.swaps.always[orig];
+  else if(S.swaps.day[date]){ delete S.swaps.day[date][orig]; if(!Object.keys(S.swaps.day[date]).length) delete S.swaps.day[date]; }
+  save();
+}
+const rerenderProgram=()=>{ if(tab==='today') rerenderWorkout(); else if(tab==='plan') renderPlan(); };
 function openLog(m){
   const M=METRICS[m], v=peekDay(today())[m]||0;
   const tip = m==='water'?'Sip between meals, not with them.':m==='steps'?'Add steps, or Set your total from your phone/watch.':m==='protein'?'Protein first at every meal.':`Aim for ${fmtN(S.targets.calMin)}–${fmtN(S.targets.calMax)}.`;
@@ -890,6 +1161,14 @@ function openSettings(){
     <label class="f">Backup (JSON)</label>
     <div class="grid2"><button class="btn" data-action="export">⬇ Export</button><button class="btn ghost" data-action="import">⬆ Import</button></div>
     <button class="btn ghost block sm" style="margin-top:8px" data-action="copy-json">Copy backup to clipboard</button>
+    <label class="f" style="margin-top:18px">52-week program</label>
+    <div class="grid2">
+      <div><label class="f">Start date</label><input class="inp" type="date" id="pStart" value="${esc(S.program.start)}"></div>
+      <div><label class="f">Jump to week</label><select class="inp" id="pWeek">${Array.from({length:PROGRAM_WEEKS},(_,i)=>i+1).map(n=>`<option value="${n}" ${n===clampWeek(progWeekRaw())?'selected':''}>Week ${n} · ${esc(phaseOf(n).name)}</option>`).join('')}</select></div>
+    </div>
+    <div class="sub" style="margin-top:6px" id="pInfo">Week 1 = the Monday of the start date. Now: week ${progWeekRaw()} of ${PROGRAM_WEEKS}${progWeekRaw()>PROGRAM_WEEKS?' (complete)':''}.</div>
+    <div class="grid2" style="margin-top:8px"><button class="btn" data-action="save-program">Save program</button><button class="btn ghost" data-action="restart-program">Restart at week 1</button></div>
+    <button class="btn ghost block sm" style="margin-top:8px" data-action="clear-swaps">Reset all exercise swaps (${Object.keys(S.swaps.always).length} always · ${Object.values(S.swaps.day).reduce((a,o)=>a+Object.keys(o).length,0)} single-day)</button>
     <label class="f" style="margin-top:18px">Goals & targets</label>
     <div class="grid2">
       ${f('sStart','Start weight (lb)',P.start,'decimal')}${f('sGoal','Goal weight (lb)',P.goal,'decimal')}
@@ -931,7 +1210,26 @@ document.addEventListener('click', e=>{
       if(i<0){ toast('Nothing to undo'); break; } d[m]=d.hist[i].prev; d.hist.splice(i,1); save();
       $('#logCur').textContent=`${fmtN(d[m])} ${METRICS[m].unit} today`; renderToday(); toast('Undone'); break; }
     case 'close-sheet': closeSheet(); break;
-    case 'howto': openHowto(el.dataset.ex); break;
+    case 'howto': { const bo=el.dataset.backOrig;
+      if(bo){ const c=$('#swapAlways'); if(c) swapAlwaysPref=c.checked; }
+      openHowto(el.dataset.ex, bo?{orig:bo,date:el.dataset.backDate}:null); break; }
+    case 'replace': openReplace(el.dataset.orig, el.dataset.date); break;
+    case 'swap-pick': { const c=$('#swapAlways'); const always = c ? c.checked : !!swapAlwaysPref;
+      const {orig,date,alt}=el.dataset; applySwap(orig,date,alt,always); swapAlwaysPref=null; closeSheet(); rerenderProgram();
+      toast(alt===orig?`Back to ${alt}`:`Swapped to ${alt}${always?' · always':''} ✓`); break; }
+    case 'swap-undo': { undoSwap(el.dataset.orig, el.dataset.date, el.dataset.kind); swapAlwaysPref=null;
+      if($('#sheet').classList.contains('on')) closeSheet(); rerenderProgram(); toast(`Swap undone · ${swapFor(el.dataset.date,el.dataset.orig).name}`); break; }
+    case 'goto-workout': selDow=null; renderToday(); { const c=$('#workoutCard'); if(c) window.scrollTo({top:c.getBoundingClientRect().top+window.scrollY-120,behavior:'smooth'}); } break;
+    case 'goto-plan': planWeek=+el.dataset.w||null; show('plan'); window.scrollTo(0,0); break;
+    case 'plan-week': planWeek=clampWeek(+el.dataset.w); renderPlan(); break;
+    case 'save-program': { const st=$('#pStart').value, wk=+$('#pWeek').value, curW=clampWeek(progWeekRaw());
+      if(wk!==curW){ S.program.start=addDays(mondayOf(today()),-(wk-1)*7); }
+      else if(/^\d{4}-\d{2}-\d{2}$/.test(st)) S.program.start=st; else { toast('Pick a start date'); break; }
+      save(); planWeek=null; closeSheet(); show(tab); toast(`Now week ${clampWeek(progWeekRaw())} · ${phaseOf(clampWeek(progWeekRaw())).name}`); break; }
+    case 'restart-program': if(confirm('Restart the 52-week program at week 1 (this week)? Your logs and history are kept.')){
+      S.program.start=mondayOf(today()); save(); planWeek=null; closeSheet(); show(tab); toast('Program restarted · week 1'); } break;
+    case 'clear-swaps': if(confirm('Remove all exercise swaps and go back to the original program?')){
+      S.swaps={always:{},day:{}}; save(); closeSheet(); show(tab); toast('All swaps reset'); } break;
     case 'seldow': selDow=+el.dataset.dow; rerenderWorkout(); break;
     case 'toggle-ex': case 'toggle-set': {
       const row=el.closest('.ex'), name=row.dataset.ex, n=+row.dataset.n, d=day();
@@ -986,6 +1284,7 @@ document.addEventListener('input', e=>{
   const el=e.target;
   if(el.dataset.action==='ex-weight'){ const row=el.closest('.ex'), name=row.dataset.ex, n=+row.dataset.n, d=day();
     const st=d.ex[name] ||= {sets:Array(n).fill(false),w:''}; st.w=el.value.trim().slice(0,12); save(); }
+  if(el.id==='planWeekSel'){ planWeek=+el.value; renderPlan(); }
   if(el.type==='range' && el.dataset.out) $('#'+el.dataset.out).textContent=el.value;
 });
 document.addEventListener('keydown', e=>{
