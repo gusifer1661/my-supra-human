@@ -259,6 +259,10 @@ textarea.inp.coach-txt{height:46vh;min-height:220px;margin-top:12px;padding:12px
 .pw-s{font-size:14px;color:var(--accent);text-align:right}
 .msub{margin-bottom:12px}.stepper .steps{display:flex;align-items:center;gap:6px;margin:8px 0}.stepper .steps i{flex:1;height:2px;background:var(--line)}
 .step{border:1px solid var(--line);background:var(--card2);color:var(--muted);border-radius:999px;padding:7px 12px;font-weight:700;font-size:13px}.step.on{border-color:var(--accent);color:var(--text)}.step.done{color:var(--good)}
+.pform .chips{flex-wrap:nowrap}.pform [hidden]{display:none!important}
+.pfx{position:relative}.pfx .inp{padding-right:44px}.pf-unit{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none}
+.pf-status{margin-top:10px;font-size:13px;line-height:1.4;color:var(--muted);min-height:18px}.pf-status.ok{color:var(--good)}.pf-status.err{color:var(--warn)}
+.inp.bad{border-color:var(--bad)}.pf-card{padding:14px}
 .tg-row{padding:12px 0;border-top:1px solid var(--line)}.tg-row .inp{height:40px}.tg-row .btn{flex:0 0 auto}.note.warn{border-color:var(--warn);margin-top:10px}
 .mtab,.nf,.wtab{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}.mtab td,.mtab th,.nf td,.nf th,.wtab td,.wtab th{padding:5px 4px;border-bottom:1px solid var(--line);text-align:right}.mtab td:first-child,.nf td:first-child,.wtab td:first-child{text-align:left}
 .mtab th,.nf th,.wtab th{color:var(--muted);font-weight:600}.tscroll{overflow-x:auto;margin:0 -4px}.wtab{min-width:560px;font-size:12px}.wtab small{color:var(--muted)}
@@ -1050,7 +1054,7 @@ function load(){
   try{ raw = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); S = normalize(raw); }
   catch(e){ console.warn('Load failed, starting fresh', e); S = DEFAULTS(); return; }
   // one-time migration v1 → v2: pin the program start date (first use) so the week number never drifts
-  if(!raw || JSON.stringify(raw.program)!==JSON.stringify(S.program)) save();
+  if(!raw || JSON.stringify(raw.program)!==JSON.stringify(S.program) || raw.meal?.set?.age!==undefined || raw.meal?.set?.cm!==undefined) save();
 }
 function normalize(raw){
   const d = DEFAULTS();
@@ -1062,7 +1066,7 @@ function normalize(raw){
   const firstUse = Object.keys(days).filter(isKey).sort()[0] || d.program.start;
   return {
     v:2,
-    profile:{...d.profile,...(raw.profile||{})},
+    profile:migrateProfile({...d.profile,...(raw.profile||{})}, raw.meal?.set),
     targets:{...d.targets,...(raw.targets||{})},
     days,
     weights: Array.isArray(raw.weights) ? raw.weights : [],
@@ -1891,7 +1895,7 @@ const NUM_FIELDS=['kcal','pro','carb','fib','sug','fat','sat','na','k','chol'];
 function normMeal(m){
   const o=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{};
   m=o(m);
-  const set={act:1.55,def:25,cap:350,wslot:3,sex:'m',age:'',cm:'',...o(m.set)};
+  const {age:_a,cm:_c,sex:_s,...setRest}=o(m.set), set={act:1.55,def:25,cap:350,wslot:3,...setRest}; // age/height/sex live in S.profile
   const stores=Array.isArray(m.stores)?m.stores.filter(s=>s&&s.id).map(cleanStore):DEFAULT_STORES.map(s=>({...s}));
   const primary=stores.some(s=>s.id===m.primary)?m.primary:(stores[0]?.id||null);
   return {v:1, set, tgt:m.tgt&&typeof m.tgt==='object'&&m.tgt.vals?{vals:o(m.tgt.vals),basis:num(m.tgt.basis),at:m.tgt.at||null}:null,
@@ -1901,13 +1905,125 @@ function normMeal(m){
 function cleanStore(s){ return {id:String(s.id), name:String(s.name||'').slice(0,60), chain:CHAINS[s.chain]?s.chain:'other', addr:String(s.addr||'').slice(0,120), notes:String(s.notes||'').slice(0,200)}; }
 
 /* ---- targets (Mifflin-St Jeor) ---- */
-function parseHeightCm(h){
-  if(h==null||h==='') return null; const s=String(h);
-  let m=s.match(/(\d+)\s*'\s*(\d+(?:\.\d+)?)?/); if(m) return Math.round((+m[1]*12+(+m[2]||0))*2.54*10)/10;
-  m=s.match(/(\d+(?:\.\d+)?)\s*cm/i); if(m) return +m[1];
-  const n=num(s); return n==null?null:n>100?n:n>48?Math.round(n*2.54*10)/10:null;
+/* ---- profile: ONE source of truth (S.profile.age / .height / .sex / .hUnit), shared by Settings and Meals ---- */
+const AGE_MIN=14, AGE_MAX=100, CM_MIN=120, CM_MAX=245; // 4 ft 0 in … 7 ft 11 in all fit
+function hFromIn(i){ const t=Math.round(i*10)/10; let ft=Math.floor(t/12), inch=Math.round((t-ft*12)*10)/10; if(inch>=12){ ft++; inch=0; } return {cm:Math.round(t*2.54*10)/10, ft, inch}; }
+const hFromCm=c=>({...hFromIn(c/2.54), cm:Math.round(c*10)/10});
+// Accepts 5'10" · 5’10” (iPhone smart quotes) · 5'10 · 5 10 · 5-10 · 5ft 10in · 5 feet 10 inches · 5.10 / 5.9 (ft.in) · 6' · 70 · 70in · 178 · 178 cm · 1.78 m
+function parseHeight(v){
+  if(v==null) return null;
+  const s=String(v).toLowerCase().replace(/[\u2019\u2018\u2032\u00b4`]/g,"'").replace(/[\u201d\u201c\u2033]|''/g,'"').replace(/,/g,'.').replace(/\s+/g,' ').trim();
+  if(!s) return null;
+  const ok=h=>h&&h.cm>=CM_MIN&&h.cm<=CM_MAX?h:null, N='(\\d+(?:\\.\\d+)?)', IN=' ?(?:"|in\\.?|inch|inches)?';
+  let m;
+  if((m=s.match(new RegExp(`^${N} ?(?:cm|cms|centimet(?:er|re)s?)$`)))) return ok(hFromCm(+m[1]));
+  if((m=s.match(new RegExp(`^${N} ?(?:m|meters?|metres?)$`)))) return ok(hFromCm(+m[1]*100));
+  if((m=s.match(new RegExp(`^${N} ?(?:"|in\\.?|inch|inches)$`)))) return ok(hFromIn(+m[1]));
+  if((m=s.match(new RegExp(`^(\\d) ?(?:'|ft\\.?|feet|foot)(?: ?-? ?${N}${IN})?$`)))||(m=s.match(new RegExp(`^(\\d)(?: |-|/)${N}${IN}$`)))){
+    const i=+(m[2]||0); return i<12?ok(hFromIn(+m[1]*12+i)):null; }
+  if((m=s.match(/^(\d)\.(\d{1,2})$/))&&+m[2]<12){ const h=ok(hFromIn(+m[1]*12+(+m[2]))); if(h) return h; } // 5.7 → 5 ft 7 in, 5.11 → 5 ft 11 in
+  if(/^\d+(?:\.\d+)?$/.test(s)){ const n=+s;
+    if(n>=CM_MIN&&n<=CM_MAX) return hFromCm(n);           // 170 → cm
+    if(n>=48&&n<=96) return ok(hFromIn(n));                // 67 → inches
+    if(n>=1.2&&n<=2.3) return ok(hFromCm(n*100));          // 1.70 → meters
+    if(n>=4&&n<=7&&Number.isInteger(n)) return hFromIn(n*12); // 6 → 6 ft
+  }
+  return null;
 }
-function mealProfile(){ const st=S.meal.set; return {age:num(st.age)??num(S.profile.age), cm:num(st.cm)??parseHeightCm(S.profile.height), sex:st.sex==='f'?'f':'m'}; }
+const parseHeightCm=v=>parseHeight(v)?.cm??null;
+const fmtHeight=(h,unit)=>!h?'':unit==='cm'?`${h.cm} cm`:`${h.ft}'${h.inch}"`;
+const hText=h=>`${h.ft} ft ${h.inch} in = ${h.cm} cm`;
+function profileVals(P=S.profile){
+  const a=num(P.age), h=parseHeight(P.height);
+  return {age:a!=null&&a>=AGE_MIN&&a<=AGE_MAX?Math.round(a):null, h, cm:h?.cm??null, sex:P.sex==='f'?'f':'m',
+    unit:P.hUnit==='cm'||P.hUnit==='ft'?P.hUnit:/cm|^\s*\d{3}/.test(String(P.height??''))?'cm':'ft'};
+}
+function mealProfile(){ const v=profileVals(); return {age:v.age, cm:v.cm, sex:v.sex}; }
+// older versions (Sep 30 meal planner) kept age/height/sex in S.meal.set: move them into the profile once
+function migrateProfile(P, set){
+  if(!set||typeof set!=='object'||(set.age==null&&set.cm==null)) return P;
+  const a=num(set.age), h=num(set.cm)!=null?parseHeight(num(set.cm)+' cm'):null;
+  if(a!=null&&a>=AGE_MIN&&a<=AGE_MAX) P.age=Math.round(a);
+  if(h){ const c=num(set.cm), wholeIn=Math.abs(Math.round(c/2.54*2)/2*2.54-c)<0.06; // old versions stored cm only: keep ft/in if it was typed that way (177.8 = 5'10"), else exact cm
+    const u=wholeIn?'ft':'cm'; P.height=fmtHeight(u==='cm'?{...h,cm:Math.round(c*10)/10}:h,u); P.hUnit=u; }
+  if((a!=null||h)&&(set.sex==='f'||set.sex==='m')) P.sex=set.sex;
+  return P;
+}
+function profileFormHTML(where){
+  const v=profileVals(), h=v.h, u=v.unit, ip='class="inp num" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"';
+  return `<div class="pform" data-where="${where}">
+    <div class="grid2"><div><label class="f">Age (years)</label><input ${ip} data-pf="age" inputmode="numeric" pattern="[0-9]*" maxlength="3" placeholder="e.g. 40" value="${v.age??''}" aria-label="Age in years"></div>
+    <div><label class="f">Sex (for BMR)</label><select class="inp" data-pf="sex"><option value="m" ${v.sex==='m'?'selected':''}>Male</option><option value="f" ${v.sex==='f'?'selected':''}>Female</option></select></div></div>
+    <div class="row between" style="margin-top:10px"><label class="f" style="margin:0">Height</label><div class="chips pf-units" style="margin:0"><button type="button" class="chip ${u==='ft'?'on':''}" data-action="pf-unit" data-v="ft">ft + in</button><button type="button" class="chip ${u==='cm'?'on':''}" data-action="pf-unit" data-v="cm">cm</button></div></div>
+    <div class="grid2 pf-ft" ${u==='ft'?'':'hidden'}><div><label class="f">Feet (4–7)</label><div class="pfx"><input ${ip} data-pf="ft" inputmode="numeric" pattern="[0-9]*" placeholder="e.g. 5" value="${h?h.ft:''}" aria-label="Height: feet, 4 to 7"><span class="pf-unit">ft</span></div></div>
+      <div><label class="f">Inches (0–11)</label><div class="pfx"><input ${ip} data-pf="in" inputmode="decimal" maxlength="4" placeholder="0" value="${h?h.inch:''}" aria-label="Height: inches, 0 to 11"><span class="pf-unit">in</span></div></div></div>
+    <div class="pf-cm" ${u==='cm'?'':'hidden'}><label class="f">Centimeters (${CM_MIN}–${CM_MAX})</label><div class="pfx"><input ${ip} data-pf="cm" inputmode="decimal" maxlength="5" placeholder="e.g. 178" value="${h?h.cm:''}" aria-label="Height: centimeters, ${CM_MIN} to ${CM_MAX}"><span class="pf-unit">cm</span></div></div>
+    <div class="pf-status ${v.age&&h?'ok':''}" aria-live="polite">${v.age&&h?`✓ Saved · ${v.age} y · ${hText(h)}`:u==='cm'?`Type your age and your height in centimeters (${CM_MIN}–${CM_MAX}).`:'Type your age, then feet in the first box and inches in the second (e.g. 5 and 10). Prefer metric? Tap cm.'}</div>
+  </div>`;
+}
+// read + validate a profile form; returns specific messages so the user knows exactly what to fix
+function readPF(box){
+  const g=k=>box.querySelector(`[data-pf="${k}"]`), unit=box.querySelector('[data-action="pf-unit"].on')?.dataset.v==='cm'?'cm':'ft';
+  const errs=[], bad=[]; let age=null, h=null;
+  const aS=g('age').value.trim(), a=/^\d+(?:[.,]\d+)?$/.test(aS)?num(aS.replace(',','.')):null;
+  if(!aS){ errs.push('Enter your age'); bad.push('age'); }
+  else if(a==null||a<AGE_MIN||a>AGE_MAX){ errs.push(`Age: enter a number from ${AGE_MIN} to ${AGE_MAX}`); bad.push('age'); }
+  else age=Math.round(a);
+  if(unit==='ft'){
+    const fS=g('ft').value.trim(), iS=g('in').value.trim().replace(',','.');
+    if(!fS&&!iS){ errs.push('Enter your height (feet and inches)'); bad.push('ft'); }
+    else if(!fS){ errs.push('Enter feet (4–7) in the first box'); bad.push('ft'); } // inches alone is never read as feet
+    else if(/^\d+$/.test(fS)&&+fS>=4&&+fS<=7){
+      const i=iS===''?0:/^\d+(?:\.\d+)?$/.test(iS)?+iS:NaN;
+      if(!(i>=0&&i<12)){ errs.push('Height: inches must be 0–11'); bad.push('in'); }
+      else { h=hFromIn(+fS*12+i); if(h.cm<CM_MIN||h.cm>CM_MAX){ h=null; errs.push('Height: feet must be 4–7'); bad.push('ft'); } }
+    } else { // pasted/typed a whole height in the feet box (5'10", 5 10, 70, 178 cm…), or bad input
+      h=parseHeight(iS?`${fS} ${iS}`:fS)||(iS?null:parseHeight(fS));
+      if(!h){ errs.push(fS?'Height: feet must be 4–7 (inches go in the second box)':'Enter feet (4–7) in the first box'); bad.push('ft'); }
+    }
+  } else {
+    const cS=g('cm').value.trim().replace(',','.');
+    if(!cS){ errs.push('Enter your height in cm'); bad.push('cm'); }
+    else if(/^\d+(?:\.\d+)?$/.test(cS)){ const c=+cS; if(c>=CM_MIN&&c<=CM_MAX) h=hFromCm(c); else { errs.push(`Height: enter ${CM_MIN}–${CM_MAX} cm`); bad.push('cm'); } }
+    else { h=parseHeight(cS); if(!h){ errs.push(`Height: enter ${CM_MIN}–${CM_MAX} cm`); bad.push('cm'); } }
+  }
+  return {age, h, unit, sex:g('sex').value==='f'?'f':'m', errs, bad, ok:!errs.length};
+}
+function pfStatus(box, r, msg, soft){
+  const s=box.querySelector('.pf-status'); if(!s) return;
+  if(soft&&!r.ok&&r.errs.every(e=>e.startsWith('Enter'))){ // just not finished yet: a hint, not an error
+    s.className='pf-status'; s.textContent=(r.age!=null?`Age ${r.age} ✓ · `:'')+'Next: '+r.errs[0].replace(/^Enter/,'enter'); box.querySelectorAll('[data-pf]').forEach(i=>i.classList.remove('bad')); return; }
+  box.querySelectorAll('[data-pf]').forEach(i=>i.classList.toggle('bad',r.bad.includes(i.dataset.pf)));
+  s.classList.toggle('ok',r.ok); s.classList.toggle('err',!r.ok);
+  s.textContent=r.ok?`${msg||'✓'} · ${r.age} y · ${hText(r.h)}`:'⚠ '+r.errs.join(' · ');
+}
+// write the valid parts of the form into S.profile (age and height independently); returns true if anything changed
+function commitPF(r){
+  const P=S.profile, before=JSON.stringify([P.age,P.height,P.sex,P.hUnit]);
+  if(r.age!=null) P.age=r.age;
+  if(r.h){ P.height=fmtHeight(r.h,r.unit); P.hUnit=r.unit; }
+  P.sex=r.sex;
+  return JSON.stringify([P.age,P.height,P.sex,P.hUnit])!==before;
+}
+function syncPFFields(box, r, pasted){ // fill the other unit's fields (and split a pasted 5'10" into ft + in) without re-rendering
+  if(!r.h) return; const g=k=>box.querySelector(`[data-pf="${k}"]`), act=document.activeElement;
+  const set=(k,v,force)=>{ const i=g(k); if(i&&(force||i!==act)) i.value=v; };
+  if(r.unit==='cm') { set('ft',r.h.ft); set('in',r.h.inch); }
+  else { set('cm',r.h.cm); if(pasted){ set('ft',r.h.ft,true); set('in',r.h.inch,true); } }
+}
+function profileChanged(){ // everything that depends on the profile, refreshed in place (no full re-render → the next tap isn't lost)
+  const b=$('#tgBody');
+  if(b&&tab==='meals'){ const anc=$('#tgAbout'), y0=anc?anc.getBoundingClientRect().top:0;
+    b.innerHTML=tgBodyHTML(b.dataset.below==='1');
+    if(anc){ const dy=anc.getBoundingClientRect().top-y0; if(Math.abs(dy)>0.5&&!$('#sheet.on')) window.scrollBy(0,dy); } }
+  const ss=$('#setProfileSub'); if(ss) ss.textContent=profileSummary();
+}
+function profileSummary(){ const v=profileVals(); return v.age&&v.h?`${v.age} y · ${v.unit==='cm'?v.h.cm+' cm':`${v.h.ft} ft ${v.h.inch} in`} · ${v.sex==='f'?'female':'male'}`:'Not set yet: needed for meal targets'; }
+function pfSave(box){ // explicit Save button
+  const r=readPF(box); pfStatus(box,r);
+  if(!r.ok){ toast(r.errs[0]); const f=box.querySelector(`[data-pf="${r.bad[0]}"]`); if(f) f.focus(); }
+  if(commitPF(r)||r.ok) save(); return r;
+}
 const r5=n=>Math.round(n/5)*5, r10=n=>Math.round(n/10)*10;
 function suggestTargets(){
   const pr=mealProfile(), st=S.meal.set, lb=currentWeight(), kg=lb*0.45359237, goalKg=S.profile.goal*0.45359237;
@@ -2131,32 +2247,35 @@ function stepperHTML(st){
 }
 /* ---- Targets ---- */
 function targetsHTML(){
-  const s=suggestTargets(), st=S.meal.set, pr=mealProfile();
-  const about=`<div class="card" id="tgAbout"><h2>About you</h2><div class="sub">Used only for the calorie estimate. Stored in this browser.</div>
-    <div class="grid2"><div><label class="f">Age</label><input class="inp num" id="tgAge" inputmode="numeric" value="${esc(pr.age??'')}"></div>
-    <div><label class="f">Height (cm, or ft'in" like 5'10")</label><input class="inp num" id="tgCm" value="${esc(pr.cm??'')}"></div>
-    <div><label class="f">Sex (for BMR)</label><select class="inp" id="tgSex"><option value="m" ${pr.sex==='m'?'selected':''}>Male</option><option value="f" ${pr.sex==='f'?'selected':''}>Female</option></select></div>
+  const s=suggestTargets(), st=S.meal.set;
+  const about=`<div class="card" id="tgAbout" data-pfwrap><h2>About you</h2><div class="sub">Same profile as in Settings. Used only for the calorie estimate and stored in this browser. Changes save automatically.</div>
+    ${profileFormHTML('meal')}
+    <div class="grid2" style="margin-top:4px">
     <div><label class="f">Activity</label><select class="inp" id="tgAct">${[[1.2,'1.2 · sedentary'],[1.375,'1.375 · light'],[1.55,'1.55 · 5 gym days'],[1.725,'1.725 · very active']].map(([v,l])=>`<option value="${v}" ${+st.act===v?'selected':''}>${l}</option>`).join('')}</select></div>
     <div><label class="f">Deficit</label><select class="inp" id="tgDef">${[20,22.5,25].map(v=>`<option value="${v}" ${+st.def===v?'selected':''}>${v}%</option>`).join('')}</select></div>
-    <div><label class="f">Meal size cap (g)</label><input class="inp num" id="tgCap" inputmode="numeric" value="${esc(st.cap)}"></div>
+    <div><label class="f">Meal size cap (g)</label><input class="inp num" id="tgCap" inputmode="numeric" pattern="[0-9]*" value="${esc(st.cap)}"></div>
     <div><label class="f">Workout after</label><select class="inp" id="tgW">${SLOTS.slice(0,4).map((l,i)=>`<option value="${i}" ${+st.wslot===i?'selected':''}>${l}</option>`).join('')}</select></div></div>
-    <button class="btn block" style="margin-top:12px" data-action="tg-save-about">Save & calculate</button></div>`;
-  if(s.need) return `<div class="card hero"><h2>Step 1 · Your targets</h2><div class="sub">Add your age and height to calculate calories (Mifflin-St Jeor).</div></div>${about}`;
+    <button class="btn block" style="margin-top:12px" data-action="pf-save">Save & calculate</button></div>`;
+  // incomplete profile: form first, results appear BELOW it (no layout shift above the Save button while typing)
+  if(s.need) return `<div class="card hero" id="tgNeed"><h2>Step 1 · Your targets</h2><div class="sub">Enter your age, then your height as <b>feet</b> and <b>inches</b> in two boxes (or tap <b>cm</b>), then tap <b>Save & calculate</b>. Calories use Mifflin-St Jeor.</div></div>${about}<div id="tgBody" data-below="1"></div>`;
+  return `<div id="tgBody">${tgBodyHTML(false)}</div>${about}<button class="btn block" data-action="msub" data-v="foods">Next: pick foods ›</button>`;
+}
+function tgBodyHTML(below){
+  const s=suggestTargets(); if(s.need) return '';
   const A=S.meal.tgt?.vals||{}, stale=tgStale();
   const rows=TG_KEYS.map(k=>{ const [l,u]=TG_META[k], sv=s.v[k], acc=A[k];
     return `<div class="tg-row" id="tg-${k}"><div class="row between"><b>${l}</b><span class="pill ${acc!=null?'good':''}">${acc!=null?'✓ '+fmtN(acc)+' '+u:'not accepted'}</span></div>
       <div class="sub">Suggested <b class="num">${k==='pro'?`${sv} g (range ${s.proMin}–${s.proMax})`:(sv>0&&(k==='train')?'+':'')+fmtN(sv)+' '+u}</b> · ${esc(s.why[k])}</div>
       <div class="row" style="gap:8px;margin-top:6px"><input class="inp num" data-tgv="${k}" inputmode="decimal" value="${acc??sv}" aria-label="${l}"><button class="btn sm" data-action="tg-accept" data-k="${k}">Accept</button></div></div>`; }).join('');
-  const K=tgVal('kcal'), mtT=mealTargets(true), mtR=mealTargets(false);
+  const K=tgVal('kcal'), mtT=mealTargets(true), mtR=mealTargets(false), h=profileVals().h;
   return `<div class="card hero" id="tgCard"><div class="row between"><h2>Step 1 · Daily targets</h2><button class="btn sm" data-action="tg-accept-all">Accept all</button></div>
-    <div class="sub">Based on <b>${r1(s.lb)} lb</b> (latest weigh-in), ${s.pr.age} y, ${s.pr.cm} cm. BMR ${fmtN(Math.round(s.bmr))} · maintenance ${fmtN(Math.round(s.tdee))} kcal. Edit any value, then Accept.</div>
+    <div class="sub" id="tgBasis">Based on <b>${r1(s.lb)} lb</b> (latest weigh-in), ${s.pr.age} y, ${h.ft} ft ${h.inch} in (${s.pr.cm} cm), ${s.pr.sex==='f'?'female':'male'}. BMR ${fmtN(Math.round(s.bmr))} · maintenance ${fmtN(Math.round(s.tdee))} kcal. Edit any value, then Accept.</div>
     ${stale?`<div class="note warn" id="tgStale">⚖️ Your weight changed from ${S.meal.tgt.basis} to ${r1(currentWeight())} lb: update suggested. Review the suggestions and accept the ones you want (nothing changes automatically).</div>`:''}
     <div class="tg-list">${rows}</div>
     <div class="sub" style="margin-top:8px">Accepting calories, protein or water also updates your daily targets (calories ${fmtN(Math.round(K-100))}–${fmtN(Math.round(K+100))}).</div></div>
     <div class="card"><h2>Per meal</h2><div class="sub">5 meals · protein ~25–35 g each · training day ${fmtN(dayTargets(true).kcal)} kcal, rest day ${fmtN(dayTargets(false).kcal)} kcal. Carbs shift toward the meals around your workout.</div>
       <table class="mtab"><tr><th></th><th>Training kcal</th><th>Protein</th><th>Rest kcal</th></tr>${SLOTS.map((l,i)=>`<tr><td>${l}${mtT[i].near?' 🏋️':''}</td><td class="num">${Math.round(mtT[i].kcal)}</td><td class="num">${Math.round(mtT[i].pro)} g</td><td class="num">${Math.round(mtR[i].kcal)}</td></tr>`).join('')}</table></div>
-    ${about}
-    <button class="btn block" data-action="msub" data-v="foods">Next: pick foods ›</button>`;
+    ${below?'<button class="btn block" data-action="msub" data-v="foods">Next: pick foods ›</button>':''}`;
 }
 /* ---- Foods ---- */
 function foodRow(f){
@@ -2330,16 +2449,28 @@ function unlogMeal(key){
   if(dd){ for(const [m,x] of Object.entries(lg.v)) dd[m]=Math.max(0,(dd[m]||0)-x); dd.hist=(dd.hist||[]).filter(h=>h.meal!==key); }
   delete S.meal.logged[key]; save(); return true;
 }
+function readMealSet(){ const g=id=>$('#'+id); if(!g('tgAct')) return false; const cap=num(g('tgCap').value), before=JSON.stringify(S.meal.set);
+  Object.assign(S.meal.set,{act:+g('tgAct').value,def:+g('tgDef').value,cap:cap&&cap>=150&&cap<=800?Math.round(cap):S.meal.set.cap,wslot:+g('tgW').value});
+  return JSON.stringify(S.meal.set)!==before; }
 function mealClick(a,el){
   const D=el.dataset, wk=viewWk();
   switch(a){
     case 'msub': mealSub=D.v; renderMeals(); window.scrollTo(0,0); return true;
     case 'mwk': mealWk=Math.max(1,+D.v); mealDay=null; renderMeals(); return true;
     case 'mday': mealDay=+D.v; renderMeals(); return true;
-    case 'tg-save-about': { const age=num($('#tgAge').value), cm=parseHeightCm($('#tgCm').value), cap=num($('#tgCap').value);
-      if(!age||age<14||age>100||!cm||cm<120||cm>230){ toast('Enter age and height'); return true; }
-      Object.assign(S.meal.set,{age,cm,sex:$('#tgSex').value,act:+$('#tgAct').value,def:+$('#tgDef').value,cap:cap&&cap>=150&&cap<=800?cap:350,wslot:+$('#tgW').value});
-      save(); renderMeals(); toast('Saved: suggestions updated'); return true; }
+    case 'pf-save': case 'tg-save-about': { const box=el.closest('[data-pfwrap]')?.querySelector('.pform')||$('.pform'); if(!box) return true;
+      const inMeals=box.dataset.where==='meal'; if(inMeals) readMealSet();
+      const r=pfSave(box);
+      if(!r.ok){ if(inMeals) profileChanged(); return true; }
+      if(inMeals){ renderMeals(); const nb=$('#v-meals .pform'); if(nb) pfStatus(nb,readPF(nb),'✓ Saved');
+        const c=$('#tgCard'); if(c) window.scrollTo({top:c.getBoundingClientRect().top+window.scrollY-120}); }
+      else { pfStatus(box,r,'✓ Saved'); profileChanged(); if(tab==='meals') renderMeals(); }
+      toast('Profile saved ✓ · targets updated'); return true; }
+    case 'pf-unit': { const box=el.closest('.pform'), r=readPF(box), u=el.dataset.v==='cm'?'cm':'ft';
+      box.querySelectorAll('[data-action="pf-unit"]').forEach(b=>b.classList.toggle('on',b===el));
+      box.querySelector('.pf-ft').hidden=u!=='ft'; box.querySelector('.pf-cm').hidden=u!=='cm';
+      if(r.h){ const g=k=>box.querySelector(`[data-pf="${k}"]`); g('ft').value=r.h.ft; g('in').value=r.h.inch; g('cm').value=r.h.cm; }
+      const r2=readPF(box); if(commitPF(r2)) { save(); profileChanged(); } pfStatus(box,r2,r2.ok?'✓ Saved':''); return true; }
     case 'tg-accept': { if(!acceptTarget(D.k,$(`[data-tgv="${D.k}"]`)?.value)){ toast('Add age & height first'); return true; } save(); renderMeals(); toast(`${TG_META[D.k][0]} accepted ✓`); return true; }
     case 'tg-accept-all': { for(const k of TG_KEYS) acceptTarget(k,$(`[data-tgv="${k}"]`)?.value); save(); renderMeals(); toast('All targets accepted ✓'); return true; }
     case 'food-grp': foodGrp=D.v; foodQ=''; renderMeals(); return true;
@@ -2394,13 +2525,26 @@ function mealClick(a,el){
   return false;
 }
 function mealInput(el){
+  if(el.dataset.pf){ const box=el.closest('.pform'); pfStatus(box,readPF(box),'✓ Looks good',true);
+    // iPhone doesn't blur an input when you tap empty space, so also auto-save shortly after typing stops
+    clearTimeout(pfTimer); pfTimer=setTimeout(()=>{ if(el.isConnected) autoSavePF(el,false); },800); return true; }
   if(el.id==='foodQ'){ foodQ=el.value; const pos=el.selectionStart; renderMeals(); const n=$('#foodQ'); n.focus(); n.setSelectionRange(pos,pos); return true; }
   if(el.dataset.mg){ const [d,s,i]=el.dataset.mg.split('|').map(Number), wk=viewWk(), m=S.meal.weeks[wk]?.days[d]?.[s], g=num(el.value); if(!m||g==null||g<0) return true;
     m.items[i].g=Math.round(g); m.items[i].m=1; save(); const t=$(`#mt-${d}-${s}`); if(t) t.innerHTML=mealTotalsHTML(m,mealTargets(d<5)[s]); const dt=$('#dayTot'); if(dt) dt.outerHTML=dayTotHTML(wk,d); return true; }
   return false;
 }
+let pfTimer=null;
+function autoSavePF(el, split){ // auto-save the valid parts of a profile form (on change/blur, and debounced while typing)
+  const box=el.closest('.pform'); if(!box) return; const r=readPF(box), v=el.value.trim(), pasted=el.dataset.pf==='ft'&&!!v&&!(/^\d$/.test(v)&&+v>=4&&+v<=7);
+  // still on the feet box with inches empty: don't auto-save 5'0" yet (the Save button treats empty inches as 0)
+  const hold=el.dataset.pf==='ft'&&r.unit==='ft'&&!pasted&&!box.querySelector('[data-pf="in"]').value.trim();
+  const ch=commitPF(hold?{...r,h:null}:r); if(ch) save(); syncPFFields(box,r,split&&pasted);
+  pfStatus(box,hold&&r.h?{...r,ok:false,errs:[`Enter inches (0–11), or tap Save for ${r.h.ft} ft 0 in`],bad:[]}:r,'✓ Saved',true); if(ch) profileChanged();
+}
 function mealChange(el){
   const wk=viewWk();
+  if(el.dataset.pf){ clearTimeout(pfTimer); autoSavePF(el,true); return true; }
+  if(['tgAct','tgDef','tgCap','tgW'].includes(el.id)){ if(readMealSet()){ save(); profileChanged(); } return true; }
   if(el.dataset.shop){ const sh=(S.meal.shop[wk] ||= {got:{},have:{}}), o=(sh[el.dataset.shop] ||= {}); if(el.checked) o[el.dataset.id]=1; else delete o[el.dataset.id]; save(); renderMeals(); return true; }
   if(el.dataset.assign){ if(el.value===S.meal.primary) delete S.meal.assign[el.dataset.assign]; else S.meal.assign[el.dataset.assign]=el.value; save(); renderMeals(); return true; }
   if(el.dataset.price){ const id=el.dataset.price, p=num(el.value), e=(S.meal.edits[id] ||= {});
@@ -2504,6 +2648,10 @@ function openSettings(){
   const T=S.targets,P=S.profile;
   const f=(id,l,v,im='numeric')=>`<div><label class="f">${l}</label><input class="inp num" id="${id}" inputmode="${im}" value="${v}"></div>`;
   openSheet(`<h2 style="margin:0 0 4px">Settings & backup</h2><div class="sub">Your data stays in this browser (localStorage)</div>
+    <div class="card pf-card" data-pfwrap style="margin:12px 0 4px"><div class="row between"><b>Your profile</b><span class="sub" id="setProfileSub">${esc(profileSummary())}</span></div>
+      <div class="sub">One profile for the whole app: Meals › Targets uses the same values. Changes save automatically.</div>
+      ${profileFormHTML('set')}
+      <button class="btn block" style="margin-top:10px" data-action="pf-save">Save profile</button></div>
     <label class="f">Backup (JSON)</label>
     <div class="grid2"><button class="btn" data-action="export">⬇ Export</button><button class="btn ghost" data-action="import">⬆ Import</button></div>
     <button class="btn ghost block sm" style="margin-top:8px" data-action="copy-json">Copy backup to clipboard</button>
